@@ -33,9 +33,10 @@ const UserSchema = new Schema(
       type: String,
       required: [true, "Password is required"],
       trim: true,
+      select: false,
     },
 
-    adddress: {
+    address: {
       street: String,
       country: String,
       city: String,
@@ -45,8 +46,24 @@ const UserSchema = new Schema(
   options
 );
 
+//agregar metodos al esquema, es necesario instanciar un documento
+UserSchema.methods.getPassword = function () {
+  // `this` hace referencia al esquema y no a la funciones query del modelo
+  // un esquema no puede acceder a la base de datos
+  return this.password;
+};
+
+//agregar metodos estaticos, no es necesario instanciar un documento
+UserSchema.statics.findUsersByCity = async function (city) {
+  // los metodos estaticos tampoco pueden acceder al modelo, por lo tanto
+  // se invoca un modelo que se haya creado anteriormente
+  const UserModel = model("User");
+  // los objetos anidados deben de especificarse su path (su ruta)
+  const users = await UserModel.find({ "address.city": city });
+  return users;
+};
+
 module.exports = {
   User: model("User", UserSchema),
   UserSchema,
 };
- 
