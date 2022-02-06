@@ -55,11 +55,9 @@ UserSchema.methods.getPassword = function () {
 
 //agregar metodos estaticos, no es necesario instanciar un documento
 UserSchema.statics.findUsersByCity = async function (city) {
-  // los metodos estaticos tampoco pueden acceder al modelo, por lo tanto
-  // se invoca un modelo que se haya creado anteriormente
-  const UserModel = model("User");
+  console.log(this)
   // los objetos anidados deben de especificarse su path (su ruta)
-  const users = await UserModel.find({ "address.city": city });
+  const users = await this.find({ "address.city": city });
   return users;
 };
 

@@ -98,20 +98,17 @@ Parecidos a los métodos de instancia con la diferencia de que no es necesario i
 ```javascript
 //agregar metodos estaticos, no es necesario instanciar un documento
 UserSchema.statics.findUsersBySameCity = async function (city) {
+    // los metodos estaticos tampoco pueden acceder al modelo
+    // por lo tanto se invoca un modelo que se haya creado anteriormente
+    const UserModel = model("User");
 
-// los metodos estaticos tampoco pueden acceder al modelo, por lo tanto
-// se invoca un modelo que se haya creado anteriormente
-const UserModel = model("User");
-
-// los objetos anidados deben de especificarse su path (su ruta)
-const users = await UserModel.find({ "address.city": city });
-return users;
+    // los objetos anidados deben de especificarse su path (su ruta)
+    const users = await UserModel.find({ "address.city": city });
+    return users;
 };
 ```
 
 > Métodos estáticos y de instancia no son lo mismo a pesar que parezcan muy similar, el primero no necesita ser instanciado y proviene del propio modelo y el segundo es necesario instanciar un nuevo documento, ambos enfoques usan funciones nativas de javascript para permitir el contexto de ```this```.
-
-
 
 ## Uso de métodos estáticos y de instancia
 
@@ -121,6 +118,8 @@ Supongamos que se tiene un método de instancia llamado ``getPassword()`` y otro
 
 ```javascript
 UserSchema.methods.getPassword = function () {
+  //`this` se refiere al documento instanceado por lo cual permite
+  //acceder a sus campos o propiedades locales
   return this.password;
 };
 ```
@@ -140,7 +139,7 @@ const usuario1 = new User({
         city: "Madrid",
         postal_code: 28001,
       },
-    });
+});
 
 // invocar el método de instancia
 const clave = usuario1.getPassword()
@@ -152,11 +151,10 @@ Por el contrario al tratar de invocar un método estático es muy diferentes, se
 ```javascript
 //agregar metodos estaticos, no es necesario instanciar un documento
 UserSchema.statics.findUsersByCity = async function (city) {
-  // los metodos estaticos tampoco pueden acceder al modelo, por lo tanto
-  // se invoca un modelo que se haya creado anteriormente
-  const UserModel = model("User");
   // los objetos anidados deben de especificarse su path (su ruta)
-  const users = await UserModel.find({ "address.city": city });
+  // `this` se refiere al modelo, no a un documento específico
+  // por ello es posible acceder a las consultas nativas de mongoose
+  const users = await this.find({ "address.city": city });
   return users;
 };
 ```
