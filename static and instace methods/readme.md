@@ -77,8 +77,19 @@ De esta forma es posible crear pequeños y útiles métodos con lógica que se q
 
 ## De instancia
 
-Usualmente estos métodos en lo personal no los suelo usar debido a que trabajando de forma local al documento que se esté creando. Sirven para gestionar los campos y comportamientos de una determinada instancia de un modelo.
+Usualmente estos métodos en lo personal no los suelo usar debido a que trabajan de forma local al documento que se esté creando. Sirven para gestionar los campos y comportamientos de una determinada instancia de un modelo, un ejemplo de los métodos de instancia sería funciones que encapsulan datos privados o sensibles del modelo, ejemplo:
 
+```javascript
+UserSchema.methods.fullname = function () {
+  return this.name + " " + this.surname;
+};
+```
 
+Un esquema de un usuario con campos como nombre, apellido, correo y clave, se crea un método para obtener el nombre completo del usuario que se vaya a guardar o editar en la base de datos. Importante destacar que `this` hace referencia al objeto del esquema, de esta forma es posible obtener los valores de los campos del nuevo registro, para hacer uso del método tan solo es invocarlo:
 
+```javascript
+const libardo = new User({ /*valores de los campos*/});
 
+console.log(libardo.fullname())
+console.log(libardo.getPassword()); // ejemplo de obtener la contraseña
+```

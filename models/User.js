@@ -53,9 +53,13 @@ UserSchema.methods.getPassword = function () {
   return this.password;
 };
 
+UserSchema.methods.fullname = function () {
+  return this.name + " " + this.surname;
+};
+
 //agregar metodos estaticos, no es necesario instanciar un documento
 UserSchema.statics.findUsersByCity = async function (city) {
-  console.log(this)
+  console.log(this);
   // los objetos anidados deben de especificarse su path (su ruta)
   const users = await this.find({ "address.city": city });
   return users;

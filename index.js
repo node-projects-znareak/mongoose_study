@@ -6,6 +6,5 @@ const methods = require("./static and instace methods");
 (async () => {
   console.clear();
 
-  //await schemas();
+  await methods();
 })();
- 
