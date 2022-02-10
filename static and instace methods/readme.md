@@ -77,7 +77,7 @@ De esta forma es posible crear pequeños y útiles métodos con lógica que se q
 
 ## De instancia
 
-Usualmente estos métodos en lo personal no los suelo usar debido a que trabajan de forma local al documento que se esté creando. Sirven para gestionar los campos y comportamientos de una determinada instancia de un modelo, un ejemplo de los métodos de instancia sería funciones que encapsulan datos privados o sensibles del modelo, ejemplo:
+Usualmente estos métodos en lo personal no los suelo usar debido a que trabajan de forma local al documento que se esté creando. Sirven para gestionar los campos y comportamientos de una determinada instancia de un modelo, un ejemplo de los métodos de instancia sería las funciones que encapsulan datos privados o sensibles del modelo, ejemplo:
 
 ```javascript
 UserSchema.methods.fullname = function () {
@@ -93,3 +93,19 @@ const libardo = new User({ /*valores de los campos*/});
 console.log(libardo.fullname())
 console.log(libardo.getPassword()); // ejemplo de obtener la contraseña
 ```
+
+Ambos métodos se ejecutan desde el contexto del documento que se esta creando (en este caso el objeto **libardo**) y ejecuta la lógica de la función.
+
+
+
+## Las queries
+
+Las queries son funciones que pertenecen a la API de mongoose, permite gestionar los datos de la base de datos (ver, modificar, eliminar y actualizar) por medio de un gran conjunto de métodos, de eso se trata las queries, permiten ejecutar una lógica hacia los datos dependiendo de que tipo de acción se quiera realizar.
+
+Ejemplo de una querie más usual para traer todos los registro de una colección:
+
+```javascript
+const users = User.find({ });
+```
+
+De este modo es posible encadenar más consultas, permitiendo ser más flexible a la hora de seleccionar los registros:

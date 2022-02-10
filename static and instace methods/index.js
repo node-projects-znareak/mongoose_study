@@ -1,6 +1,6 @@
 const { User } = require("../models/User");
 
-function app() {
+async function app() {
   const libardo = new User({
     name: "Libardo",
     surname: "Rengifo",
@@ -14,8 +14,11 @@ function app() {
     },
   });
 
-  console.log(libardo.fullname())
-  console.log(libardo.getPassword());
+//   console.log(libardo.fullname())
+//   console.log(libardo.getPassword());
+
+  const users = await User.find({})
+  console.log(users)
 }
 
 module.exports = app;
