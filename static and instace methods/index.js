@@ -14,11 +14,15 @@ async function app() {
     },
   });
 
-//   console.log(libardo.fullname())
-//   console.log(libardo.getPassword());
+  //   console.log(libardo.fullname())
+  //   console.log(libardo.getPassword());
 
+  console.log("Usuarios:");
+  //const users = await User.find({}).byCountry("Venezuela");
   const users = await User.find({})
-  console.log(users)
+    .where({ "address.country": "Venezuela" })
+    .select("-address");
+  console.log(users);
 }
 
 module.exports = app;

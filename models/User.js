@@ -65,6 +65,11 @@ UserSchema.statics.findUsersByCity = async function (city) {
   return users;
 };
 
+//una query que es posible encadenarla con otras
+UserSchema.query.byCountry = function (country) {
+  return this.where({ "address.country": country }).select("-address");
+};
+
 module.exports = {
   User: model("User", UserSchema),
   UserSchema,

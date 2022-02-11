@@ -96,8 +96,6 @@ console.log(libardo.getPassword()); // ejemplo de obtener la contraseña
 
 Ambos métodos se ejecutan desde el contexto del documento que se esta creando (en este caso el objeto **libardo**) y ejecuta la lógica de la función.
 
-
-
 ## Las queries
 
 Las queries son funciones que pertenecen a la API de mongoose, permite gestionar los datos de la base de datos (ver, modificar, eliminar y actualizar) por medio de un gran conjunto de métodos, de eso se trata las queries, permiten ejecutar una lógica hacia los datos dependiendo de que tipo de acción se quiera realizar.
@@ -109,3 +107,28 @@ const users = User.find({ });
 ```
 
 De este modo es posible encadenar más consultas, permitiendo ser más flexible a la hora de seleccionar los registros:
+
+```javascript
+ const users = await User.find({})
+    .where({ "address.country": "Venezuela" })
+    .select("-address");
+```
+
+En el ejemplo dado, se muestra como se puede encadenar consultas de forma muy flexible y clara al programador.
+
+Se busca todos los registros de usuarios, se filtran por el país de origen y se remueven aquellos campos que no se deseen mostrar. Ahora bien, para transformar aquella lógica en una **query** de mongoose solo hace falta usar la propiedad ``query`` de los esquemas y agregarle la nueva query:
+
+```javascript
+//una query que es posible encadenarla con otras
+UserSchema.query.byCountry = function (country) {
+  return this.where({ "address.country": country }).select("-address");
+};
+```
+
+Ahora al tratar de usar alguna consulta de la API de mongoose, tambien tendra disponible la nueva query agregada al esquema:
+
+```javascript
+const users = await User.find({}).byCountry("Venezuela");
+```
+
+De tal forma se puede extender la funcionalidad de las consultas en mongoose de forma flexbile y encapsulada. Lo mejor de esta característica es la capacidad de crear tus propios métodos y lógica separada abstrayendo el código de forma que el programador sea capaz de entender el objetivo de la consulta.
