@@ -19,16 +19,36 @@
   font-family: "Poppins", sans-serif;
 }
 
+/* width */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.438);
+  border-radius: 4px;
+}
+
 html,
 body {
   width: 100%;
   height: 100%;
 }
 
-body {
+@mixin backgroundBody {
   background: #0f2027;
   background: -webkit-linear-gradient(to left, #213d49, #203a43, #0f2027);
   background: linear-gradient(to left, #213d49, #203a43, #0f2027);
+}
+
+body {
+  @include backgroundBody();
   font-family: inherit;
   color: rgba(255, 255, 255, 0.897);
 }
@@ -49,7 +69,7 @@ p {
 .wrapper {
   display: flex;
   justify-content: space-between;
-  height: 100vh;
+  height: 100%;
 
   &.modal-open {
     filter: blur(1px);
@@ -59,11 +79,13 @@ p {
 }
 
 .nav {
-  margin-top: 2rem;
   flex-basis: 320px;
-  height: 100vh;
+  height: 100%;
   position: relative;
-  padding: 5px;
+  padding: 2rem 5px;
+  padding-top: 2rem;
+  display: flex;
+  flex-direction: column;
 
   .nav-title {
     font-size: 1.8rem;
@@ -91,8 +113,12 @@ p {
   }
 
   .nav-sections {
+    display: flex;
+    flex-direction: column;
     margin-top: 1rem;
     list-style: none;
+    overflow-y: auto;
+    padding-right: 0.8rem;
 
     li {
       display: flex;
@@ -120,7 +146,7 @@ p {
     content: "";
     display: block;
     position: absolute;
-    right: -20px;
+    right: -15px;
     width: 1px;
     height: 100%;
     background-color: rgba(238, 238, 238, 0.356);
@@ -359,22 +385,38 @@ textarea.input {
   }
 }
 
+#spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 9999;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  @include backgroundBody();
+}
+
 .loader,
 .loader:after {
+  $size: 3em;
+
   border-radius: 50%;
-  width: 10em;
-  height: 10em;
+  width: $size;
+  height: $size;
 }
 
 .loader {
+  $borderSize: 0.3em;
   margin: 60px auto;
   font-size: 10px;
   position: relative;
   text-indent: -9999em;
-  border-top: 1.1em solid rgba(255, 255, 255, 0.2);
-  border-right: 1.1em solid rgba(255, 255, 255, 0.2);
-  border-bottom: 1.1em solid rgba(255, 255, 255, 0.2);
-  border-left: 1.1em solid #ffffff;
+  border-top: $borderSize solid rgba(255, 255, 255, 0.2);
+  border-right: $borderSize solid rgba(255, 255, 255, 0.2);
+  border-bottom: $borderSize solid rgba(255, 255, 255, 0.2);
+  border-left: $borderSize solid #ffffff;
   -webkit-transform: translateZ(0);
   -ms-transform: translateZ(0);
   transform: translateZ(0);

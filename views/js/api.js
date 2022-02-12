@@ -3,12 +3,15 @@ import { createTaskSectionNode } from "../helpers/dom.mjs";
 
 window.addEventListener("DOMContentLoaded", () => {
   (async () => {
+    const spinner = document.getElementById("spinner");
     const sectionTasksList = document.getElementById("sections");
     const select = document.getElementById("icon");
     const req = await fetch("./icons/icons.json");
     const json = await req.json();
     const inputIcon = document.getElementById("_icon");
     window.icons = json;
+
+    spinner.style.display = "none";
 
     for (const sectionTask of getAllSectionTasks()) {
       sectionTasksList.appendChild(

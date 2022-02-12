@@ -18,10 +18,16 @@ async function app() {
   //   console.log(libardo.getPassword());
 
   console.log("Usuarios:");
-  //const users = await User.find({}).byCountry("Venezuela");
-  const users = await User.find({})
-    .where({ "address.country": "Venezuela" })
-    .select("-address");
+  const users = await User.find({}).byCountry("Venezuela");
+
+  // Equivalencia en queries nativas
+  // const users = await User.find({})
+  //   .where({ "address.country": "Venezuela" })
+  //   .select("-address"); 
+  
+  // no es posible combinar inclusión y exclusión de campos en una misma query
+  // https://www.mongodb.com/community/forums/t/projection-does-not-allow-exclusion-inclusion-together/31756
+
   console.log(users);
 }
 

@@ -1,5 +1,4 @@
 const { error } = require("../helpers/messages");
-const connectDb = require("../helpers/mongodb");
 const { User, UserSchema } = require("../models/User");
 
 UserSchema.add({
@@ -34,7 +33,6 @@ async function createDocument() {
 }
 
 async function app() {
-  await connectDb();
   const doc = await createDocument();
   const usersCity = await User.findUsersByCity("Caracas");
   //console.log(usuario1.id);
