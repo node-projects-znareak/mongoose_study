@@ -1,4 +1,5 @@
 import { addSectionTask } from "../helpers/tasks.mjs";
+import { createTaskSectionNode } from "../helpers/dom.mjs";
 import { Eggy } from "./vendors/eggy.mjs";
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -28,6 +29,8 @@ window.addEventListener("DOMContentLoaded", () => {
     };
 
     addSectionTask(task);
+    createTaskSectionNode(task.title, task.desc, task.icon);
+    
     Eggy({
       title: "Categoría creada",
       message: "La categoría fue creada y añadida con exito",
