@@ -1,8 +1,9 @@
 import { addSectionTask } from "../helpers/tasks.mjs";
-import { createTaskSectionNode } from "../helpers/dom.mjs";
+import { createTaskSectionNode, saveSectionTasks } from "../helpers/dom.mjs";
 import { Eggy } from "./vendors/eggy.mjs";
 
 window.addEventListener("DOMContentLoaded", () => {
+  const btnExportTasks = document.getElementById("export-sections");
   const wrapper = document.querySelector(".wrapper");
   const btnToggleModal = document.getElementById("btn-create");
   const modal = document.querySelector(".modal");
@@ -14,6 +15,7 @@ window.addEventListener("DOMContentLoaded", () => {
     modal.classList.toggle("modal-open");
   }
 
+  btnExportTasks.addEventListener("click", saveSectionTasks);
   btnToggleModal.addEventListener("click", toggleModal);
   closeModal.addEventListener("click", toggleModal);
   modal.addEventListener("click", (e) => {
@@ -30,7 +32,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     addSectionTask(task);
     createTaskSectionNode(task.title, task.desc, task.icon);
-    
+
     Eggy({
       title: "Categoría creada",
       message: "La categoría fue creada y añadida con exito",
