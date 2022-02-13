@@ -124,10 +124,11 @@ p {
     li {
       display: flex;
       align-items: center;
-      padding: 1.2rem 1rem;
+      padding: 1rem 0.7rem;
       border-radius: 4px;
       width: 100%;
       cursor: pointer;
+      position: relative;
 
       &:not(:last-child) {
         margin-bottom: 5px;
@@ -135,10 +136,41 @@ p {
 
       > span {
         margin-left: 10px;
+        font-size: 14px;
+        display: block;
+        width: 100%;
+      }
+
+      > svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      .nav-item-menu {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        right: 10px;
+        border-radius: 4px;
+        padding: 3px;
+
+        svg {
+          width: 20px;
+          height: 20px;
+        }
+
+        &:hover {
+          background-color: rgba(214, 214, 214, 0.158);
+        }
       }
 
       &:hover {
         background-color: rgba(238, 238, 238, 0.158);
+
+        .nav-item-menu {
+          display: flex;
+        }
       }
 
       &:active {
@@ -582,6 +614,23 @@ textarea.input {
     border: 1px rgba(238, 238, 238, 0.26) solid;
     background-color: #0f2027b0;
     margin-bottom: 0.7rem;
+    position: relative;
+    word-break: break-all;
+
+    &.task-finished {
+      .task-done {
+        display: block;
+        position: absolute;
+        bottom: 2px;
+        right: 2px;
+      }
+    }
+
+    .task-done {
+      display: none;
+      background-color: #142930;
+      border-radius: 50%;
+    }
 
     .task-title {
       margin-bottom: 0.8rem;
