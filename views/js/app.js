@@ -1,28 +1,32 @@
 import { addSectionTask } from "../helpers/tasks.mjs";
-import { createTaskSectionNode, saveSectionTasks } from "../helpers/dom.mjs";
+import {
+  createTaskSectionNode,
+  saveSectionTasks,
+  getNode,
+  selector,
+  on,
+} from "../helpers/dom.mjs";
 import { Eggy } from "./vendors/eggy.mjs";
 
 window.addEventListener("DOMContentLoaded", () => {
-  const btnExportTasks = document.getElementById("export-sections");
-  const wrapper = document.querySelector(".wrapper");
-  const btnToggleModal = document.getElementById("btn-create");
-  const modal = document.querySelector(".modal");
-  const closeModal = document.getElementById("close");
-  const formCreate = document.getElementById("form-create");
+  const btnExportTasks = getNode("export-sections");
+  const closeModal = getNode("close");
+  const formCreate = getNode("form-create");
+  const btnToggleModal = getNode("btn-create");
+  const wrapper = selector(".wrapper");
+  const modal = selector(".modal");
 
   function toggleModal() {
     wrapper.classList.toggle("modal-open");
     modal.classList.toggle("modal-open");
   }
 
-  btnExportTasks.addEventListener("click", saveSectionTasks);
-  btnToggleModal.addEventListener("click", toggleModal);
-  closeModal.addEventListener("click", toggleModal);
-  modal.addEventListener("click", (e) => {
-    if (e.target.classList.contains("modal")) toggleModal();
-  });
+  on(btnExportTasks).click(saveSectionTasks);
+  on(btnToggleModal).click(toggleModal);
+  on(closeModal).click(toggleModal);
+  on(modal).click((e) => e.target.classList.contains("modal") && toggleModal());
 
-  formCreate.addEventListener("submit", (e) => {
+  on(formCreate).submit((e) => {
     e.preventDefault();
     const task = {
       title: e.target.title.value,
