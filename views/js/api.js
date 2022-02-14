@@ -29,21 +29,19 @@ window.addEventListener("DOMContentLoaded", () => {
     function calculatePosition(target) {
       const domRect = target.getBoundingClientRect();
       const space = Math.trunc(window.innerHeight - domRect.bottom);
-      if (space < 0) {
-        target.style.bottom = "23px";
+      if (space < 100) {
+        target.querySelector(".nav-item-submenu").style.bottom = "23px";
       } else {
-        target.style.bottom = "-95px";
+        target.querySelector(".nav-item-submenu").style.bottom = "-95px";
       }
-      console.log(space);
     }
 
     for (const subMenuIcon of subMenusIcon) {
       const calc = () => {
-        const subMenu = subMenuIcon.querySelector(".nav-item-submenu");
-        calculatePosition(subMenu);
+        calculatePosition(subMenuIcon);
       };
 
-      subMenuIcon.addEventListener("mouseover", calc);
+      subMenuIcon.addEventListener("mouseenter", calc);
       window.addEventListener("scroll", calc);
       window.addEventListener("resize", calc);
     }

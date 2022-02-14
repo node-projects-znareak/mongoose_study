@@ -156,7 +156,8 @@ p {
       }
 
       .nav-item-menu {
-        display: none;
+        display: flex;
+        visibility: hidden;
         align-items: center;
         justify-content: center;
         position: absolute;
@@ -170,7 +171,7 @@ p {
         }
 
         .nav-item-submenu {
-          display: none;
+          visibility: hidden;
           position: absolute;
           bottom: -95px;
           right: -9px;
@@ -217,7 +218,7 @@ p {
           background-color: rgba(214, 214, 214, 0.158);
 
           .nav-item-submenu {
-            display: block;
+            visibility: visible;
           }
         }
       }
@@ -226,7 +227,7 @@ p {
         background-color: rgba(238, 238, 238, 0.158);
 
         .nav-item-menu {
-          display: flex;
+          visibility: visible;
         }
       }
 
