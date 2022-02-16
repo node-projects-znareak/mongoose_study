@@ -30,9 +30,9 @@ window.addEventListener("DOMContentLoaded", () => {
       const domRect = target.getBoundingClientRect();
       const space = Math.trunc(window.innerHeight - domRect.bottom);
       if (space < 100) {
-        target.querySelector(".nav-item-submenu").style.bottom = "23px";
+        target.querySelector(".nav-item-submenu").style.bottom = "25px";
       } else {
-        target.querySelector(".nav-item-submenu").style.bottom = "-95px";
+        target.querySelector(".nav-item-submenu").style.bottom = "-90px";
       }
     }
 

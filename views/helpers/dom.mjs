@@ -39,10 +39,6 @@ export const createElement = (initObj) => {
 };
 
 export function createTaskSectionNode(title, desc, icon) {
-  const OPTIONS = [
-    { title: "Editar", icon: ICONS.EDIT },
-    { title: "Eliminar", icon: ICONS.DELETE },
-  ];
   const [[_icon]] = window.icons[icon];
   const sectionTasksList = getNode("sections");
   const li = createElement({
@@ -50,8 +46,17 @@ export function createTaskSectionNode(title, desc, icon) {
     title: desc,
     innerHTML: _icon.svg_path,
   });
+  const OPTIONS = [
+    { title: "Editar", icon: ICONS.EDIT },
+    { title: "Eliminar", icon: ICONS.DELETE },
+  ];
   const spanText = createElement({ tag: "span", textContent: title });
-  const navItemMenu = createElement({ tag: "div", className: "nav-item-menu" });
+  const navItemMenu = createElement({
+    tag: "div",
+    className: "nav-item-menu",
+    innerHTML: ICONS.VERTICAL_DOTS,
+    attributes: [{ key: "tabindex", value: -1 }],
+  });
   const navItemSubMenu = createElement({
     tag: "div",
     className: "nav-item-submenu",
@@ -60,16 +65,19 @@ export function createTaskSectionNode(title, desc, icon) {
     tag: "ul",
     className: "nav-item-submenu-menu",
   });
-  navItemMenu.innerHTML = ICONS.VERTICAL_DOTS;
 
-  for (const navItemSubMenuOption of OPTIONS) {
+  for (const { icon, title, ...args } of OPTIONS) {
     const op = createElement({
       tag: "li",
-      innerHTML: `${navItemSubMenuOption.icon}<span>${navItemSubMenuOption.title}</span>`,
+      innerHTML: `${icon}<span>${title}</span>`,
+      ...args,
     });
     navItemSubMenu_menu.appendChild(op);
   }
 
+  navItemSubMenu_menu.addEventListener("click", (e) => {
+    console.log(e.target);
+  });
   navItemSubMenu.appendChild(navItemSubMenu_menu);
   navItemMenu.appendChild(navItemSubMenu);
 

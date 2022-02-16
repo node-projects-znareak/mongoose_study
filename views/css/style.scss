@@ -155,9 +155,10 @@ p {
         height: 20px;
       }
 
+      // icono de los puntos
       .nav-item-menu {
         display: flex;
-        visibility: hidden;
+        display: none;
         align-items: center;
         justify-content: center;
         position: absolute;
@@ -170,14 +171,16 @@ p {
           height: 20px;
         }
 
+        //wrapper del <ul>
         .nav-item-submenu {
-          visibility: hidden;
+          display: none;
           position: absolute;
-          bottom: -95px;
+          bottom: -90px;
           right: -9px;
-          z-index: 10;
-          padding: 0.5rem;
+          padding: 0.3rem;
+          z-index: 10; // necesario para que el dropdown no se oculte al quitar el mouse
 
+          // <ul> con las opciones del dropdown
           .nav-item-submenu-menu {
             list-style: none;
             background: rgb(255, 255, 255);
@@ -216,9 +219,12 @@ p {
 
         &:hover {
           background-color: rgba(214, 214, 214, 0.158);
+        }
 
+        &:focus {
+          box-shadow: 0 0 0 0.100rem #0f2027de;
           .nav-item-submenu {
-            visibility: visible;
+            display: block;
           }
         }
       }
@@ -227,7 +233,7 @@ p {
         background-color: rgba(238, 238, 238, 0.158);
 
         .nav-item-menu {
-          visibility: visible;
+          display: flex;
         }
       }
 
