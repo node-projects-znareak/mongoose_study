@@ -44,23 +44,40 @@ export function createTaskSectionNode(title, desc, icon) {
   const li = createElement({
     tag: "li",
     title: desc,
-    innerHTML: _icon.svg_path,
   });
+  li.insertAdjacentHTML("afterbegin", _icon.svg_path);
+
   const OPTIONS = [
-    { title: "Editar", icon: ICONS.EDIT },
-    { title: "Eliminar", icon: ICONS.DELETE },
+    {
+      title: "Editar",
+      icon: ICONS.EDIT,
+      onclick: (e) => {
+        console.log(e.target);
+      },
+    },
+    {
+      title: "Eliminar",
+      icon: ICONS.DELETE,
+      onclick: (e) => {
+        console.log(e.target);
+      },
+    },
   ];
   const spanText = createElement({ tag: "span", textContent: title });
+
   const navItemMenu = createElement({
     tag: "div",
     className: "nav-item-menu",
-    innerHTML: ICONS.VERTICAL_DOTS,
     attributes: [{ key: "tabindex", value: -1 }],
   });
+
+  navItemMenu.insertAdjacentHTML("afterbegin", ICONS.VERTICAL_DOTS);
+
   const navItemSubMenu = createElement({
     tag: "div",
     className: "nav-item-submenu",
   });
+
   const navItemSubMenu_menu = createElement({
     tag: "ul",
     className: "nav-item-submenu-menu",
@@ -69,15 +86,19 @@ export function createTaskSectionNode(title, desc, icon) {
   for (const { icon, title, ...args } of OPTIONS) {
     const op = createElement({
       tag: "li",
-      innerHTML: `${icon}<span>${title}</span>`,
       ...args,
     });
+
+    // innerHTML
+    const spanTitle = createElement({
+      tag: "div",
+      innerHTML: `${icon}<span>${title}</span>`,
+    });
+    op.appendChild(spanTitle);
+    // op.innerHTML = `${icon}<span>${title}</span>`;
     navItemSubMenu_menu.appendChild(op);
   }
 
-  navItemSubMenu_menu.addEventListener("click", (e) => {
-    console.log(e.target);
-  });
   navItemSubMenu.appendChild(navItemSubMenu_menu);
   navItemMenu.appendChild(navItemSubMenu);
 
@@ -89,7 +110,7 @@ export function createTaskSectionNode(title, desc, icon) {
 export function createOptionList(icon, name, select) {
   const op = document.createElement("li");
   op.setAttribute("data-icon", icon.name);
-  op.innerHTML = `${icon} <span>${name}</span>`;
+  op.insertAdjacentHTML("afterbegin", `${icon} <span>${name}</span>`);
   op.addEventListener("click", () => {
     select.parentNode.querySelector("span").innerHTML = op.innerHTML;
     inputIcon.value = op.querySelector("span").textContent;
