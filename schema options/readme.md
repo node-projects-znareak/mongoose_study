@@ -21,7 +21,6 @@ Las propiedades más importantes se listan a continuación:
   
   ```javascript
   const schema = new Schema({ name: String }, { _id: false });
-  
   ```
 
 - ``timestamps`` permite especificar la fecha de creación y última actualización del documento al ser creado, es una opción muy útil ya que nos ahorra hacer esta lógica manualmente, puede ser un booleano o un objeto especificando el nombre de las propiedades
@@ -32,6 +31,8 @@ Las propiedades más importantes se listan a continuación:
        createdAt: 'created_at' // tambien puede ser true
     }
   });
-  
-  
   ```
+
+```
+
+```

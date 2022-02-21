@@ -51,16 +51,10 @@ export function createTaskSectionNode(title, desc, icon) {
     {
       title: "Editar",
       icon: ICONS.EDIT,
-      onclick: (e) => {
-        console.log(e.target);
-      },
     },
     {
       title: "Eliminar",
       icon: ICONS.DELETE,
-      onclick: (e) => {
-        console.log(e.target);
-      },
     },
   ];
   const spanText = createElement({ tag: "span", textContent: title });
@@ -84,10 +78,7 @@ export function createTaskSectionNode(title, desc, icon) {
   });
 
   for (const { icon, title, ...args } of OPTIONS) {
-    const op = createElement({
-      tag: "li",
-      ...args,
-    });
+    const op = document.createElement("li");
 
     // innerHTML
     const spanTitle = createElement({
@@ -95,6 +86,13 @@ export function createTaskSectionNode(title, desc, icon) {
       innerHTML: `${icon}<span>${title}</span>`,
     });
     op.appendChild(spanTitle);
+    op.addEventListener("click", (e) => {
+      if (title === "Eliminar") {
+        console.log("eliminar");
+      } else {
+        console.log("editar");
+      }
+    });
     // op.innerHTML = `${icon}<span>${title}</span>`;
     navItemSubMenu_menu.appendChild(op);
   }
