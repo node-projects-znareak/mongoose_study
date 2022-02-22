@@ -23,11 +23,13 @@ const CategorySchema = new Schema(
       trim: true,
       maxlength: 200,
     },
-    category_id: {
-      type: Types.ObjectId,
-      ref: "Category",
-      default: null, // si es diferente a null es una sub-categoria
-    },
+    subcategories: [
+      {
+        type: Types.ObjectId,
+        ref: "Category",
+        default: null, // si es diferente a null es una sub-categoria
+      },
+    ],
   },
   {
     collection: "categories",
@@ -35,19 +37,22 @@ const CategorySchema = new Schema(
   }
 );
 
-CategorySchema.statics.findSubCategory = function () {
+CategorySchema.query.getSubCategories = function () {
+  return this.populate("subcategories");
+};
+
+CategorySchema.statics.findSubCategory = function (id) {
   // buscamos todas las subcategorías que pertenezcan
   // a la categoría principal
   const subCategories = this.find({
     // convertirmos el string en un ObjectId de mongoose
     // se recoge todos los documentos que tengan una
     // relación a si misma (sub-categoría)
-    category_id: Types.ObjectId(this._id),
+    category_id: Types.ObjectId(id),
   });
 
   return subCategories;
 };
-s
 
 module.exports = {
   Category: model("Category", CategorySchema),

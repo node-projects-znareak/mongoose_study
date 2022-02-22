@@ -1,5 +1,5 @@
 const { Product, ProductSchema } = require("../models/Product");
-
+const { Schema } = require("mongoose");
 async function app() {
   const product = new Product({
     name: "Vino blanco",
