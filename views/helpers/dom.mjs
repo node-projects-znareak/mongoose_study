@@ -79,7 +79,7 @@ export function createTaskSectionNode(title, desc, icon) {
 
   for (const { icon, title, ...args } of OPTIONS) {
     const op = document.createElement("li");
-
+    // console.log(title +"\n")
     // innerHTML
     const spanTitle = createElement({
       tag: "div",
@@ -87,8 +87,10 @@ export function createTaskSectionNode(title, desc, icon) {
     });
     op.appendChild(spanTitle);
     op.addEventListener("click", (e) => {
+      console.log(e)
       if (title === "Eliminar") {
         console.log("eliminar");
+        li.remove();
       } else {
         console.log("editar");
       }
@@ -96,6 +98,11 @@ export function createTaskSectionNode(title, desc, icon) {
     // op.innerHTML = `${icon}<span>${title}</span>`;
     navItemSubMenu_menu.appendChild(op);
   }
+
+  // navItemSubMenu_menu.addEventListener("click", ()=>{
+  //   console.log("click!")
+
+  // })
 
   navItemSubMenu.appendChild(navItemSubMenu_menu);
   navItemMenu.appendChild(navItemSubMenu);

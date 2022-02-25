@@ -21,11 +21,14 @@ async function app() {
 
   const find = await Coords.find({}).where("y").eq(9939);
   //const find = await Coords.findOne({y:9939})
-  console.log(find);
+  //   console.log(find);
 
   // await Coords.deleteOne({x: 1693})
   const remove = await Coords.deleteOne({}).where("x").eq(1693);
-  console.log(remove);
+  //   console.log(remove);
+
+  const find2 = await Coords.find({}).where("y").gte(5000).lte(6000).select("y -_id");
+  console.log(find2);
 }
 
 module.exports = app;
