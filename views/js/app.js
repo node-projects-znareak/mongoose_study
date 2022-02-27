@@ -2,50 +2,90 @@ import { addSectionTask } from "../helpers/tasks.mjs";
 import {
   createTaskSectionNode,
   saveSectionTasks,
+  loadOptionListIcons,
   getNode,
-  selector,
   on,
 } from "../helpers/dom.mjs";
 import { Eggy } from "./vendors/eggy.mjs";
 
 window.addEventListener("DOMContentLoaded", () => {
   const btnExportTasks = getNode("export-sections");
-  const closeModal = getNode("close");
-  const formCreate = getNode("form-create");
   const btnToggleModal = getNode("btn-create");
-  const wrapper = selector(".wrapper");
-  const modal = selector(".modal");
-
-  function toggleModal() {
-    wrapper.classList.toggle("modal-open");
-    modal.classList.toggle("modal-open");
-  }
 
   on(btnExportTasks).click(saveSectionTasks);
-  on(btnToggleModal).click(toggleModal);
-  on(closeModal).click(toggleModal);
-  on(modal).click((e) => e.target.classList.contains("modal") && toggleModal());
+  on(btnToggleModal).click(() => {
+    Swal.fire({
+      icon: "question",
+      title: "Crear categoría",
+      html: /*html*/ `
+        <form id="form-create">
+          <div class="input-row">
+            <div class="input-group">
+              <label for="title">Título de la categoría</label>
+              <input
+                type="text"
+                class="input"
+                id="title"
+                name="title"
+                placeholder="Hola! soy una categoría"
+                required
+              />
+            </div>
 
-  on(formCreate).submit((e) => {
-    e.preventDefault();
-    const task = {
-      title: e.target.title.value,
-      desc: e.target.desc.value,
-      icon: e.target.icon.value,
-    };
+            <div class="input-group">
+              <label for="desc">Descripción de la categoría</label>
+              <textarea
+                type="text"
+                class="input"
+                id="desc"
+                name="desc"
+                placeholder="Puedes escribir más aquí!"
+                required
+              ></textarea>
+            </div>
 
-    addSectionTask(task);
-    createTaskSectionNode(task.title, task.desc, task.icon);
+            <div class="input-group">
+              <input
+                type="hidden"
+                form="form-create"
+                name="icon"
+                value=""
+                id="_icon"
+              />
+              <div class="input dropdown">
+                <span for="icon">Icóno</span>
+                <ul id="icon"></ul>
+              </div>
+            </div>
+          </div>
+      </form>
+      `,
+      showCloseButton: true,
+      confirmButtonText: "Crear",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        const formCreate = getNode("form-create");
+        const sectionTask = {
+          title: formCreate.title.value,
+          desc: formCreate.desc.value,
+          icon: formCreate.icon.value,
+        };
 
-    Eggy({
-      title: "Categoría creada",
-      message: "La categoría fue creada y añadida con exito",
-      type: "success",
+        addSectionTask(sectionTask);
+        createTaskSectionNode(
+          sectionTask.title,
+          sectionTask.desc,
+          sectionTask.icon
+        );
+
+        Eggy({
+          title: "Categoría creada",
+          message: "La categoría fue creada y añadida con exito",
+          type: "success",
+        });
+      }
     });
 
-    e.target.reset();
-    toggleModal();
-
-    console.log(task);
+    loadOptionListIcons();
   });
 });

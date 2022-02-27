@@ -53,6 +53,24 @@ export function deleteTasksBySection(sectionId) {
 }
 
 // -------- SECTION TASKS --------
+export function getSectionTask(id) {
+  const sectionTasks = getAllSectionTasks();
+  const section = sectionTasks.find((task) => task.id === id);
+  return section;
+}
+
+export function editSectionTask({ title, desc, icon, id }) {
+  const sectionTask = getSectionTask(id);
+  sectionTask.title = title || sectionTask.title;
+  sectionTask.desc = desc || sectionTask.desc;
+  sectionTask.icon = icon || sectionTask.icon;
+
+  const sectionTasks = getAllSectionTasks().map((_sectionTask) => {
+    return _sectionTask.id === sectionTask.id ? sectionTask : _sectionTask;
+  });
+
+  setSectionTasks(sectionTasks);
+}
 
 export function getAllSectionTasks() {
   return JSON.parse(localStorage.getItem("sectionTasks")) || [];
@@ -66,7 +84,7 @@ export function getSectionById(sectionId, op) {
   const sectionTasks = getAllSectionTasks();
   const sectionTask = sectionTasks.find((section) => section.id === sectionId);
   op ? sectionTask.tasks++ : sectionTask.tasks--;
-  setSectionTask(sectionTasks);
+  setSectionTasks(sectionTasks);
 }
 
 export function deleteSectionTask(sectionId) {
@@ -75,7 +93,7 @@ export function deleteSectionTask(sectionId) {
     (sectionTask) => sectionTask.id !== sectionId
   );
 
-  setSectionTask(sectionTasksFilter);
+  setSectionTasks(sectionTasksFilter);
   deleteTasksBySection(sectionId);
   return sectionTasksFilter;
 }
@@ -94,7 +112,7 @@ export function getTaskCountBySection(sectionId) {
   return count.length;
 }
 
-export function setSectionTask(sectionTasks) {
+export function setSectionTasks(sectionTasks) {
   localStorage.setItem("sectionTasks", JSON.stringify(sectionTasks));
 }
 
@@ -113,5 +131,5 @@ export function addSectionTask(sectionTask) {
   const sectionTasks = getAllSectionTasks();
   sectionTask.id = getLastSectionId();
   sectionTasks.push(sectionTask);
-  setSectionTask(sectionTasks);
+  setSectionTasks(sectionTasks);
 }

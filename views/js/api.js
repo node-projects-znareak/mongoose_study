@@ -1,27 +1,20 @@
 import { getAllSectionTasks } from "../helpers/tasks.mjs";
-import { createTaskSectionNode, createOptionList } from "../helpers/dom.mjs";
+import { createTaskSectionNode, getIcons } from "../helpers/dom.mjs";
+import { getNode } from "../helpers/dom.mjs";
 
 window.addEventListener("DOMContentLoaded", () => {
   (async () => {
-    const spinner = document.getElementById("spinner");
-    const select = document.getElementById("icon");
-    const req = await fetch("./icons/icons.json");
-    const json = await req.json();
-    window.icons = json;
-
+    const spinner = getNode("spinner");
+    window.icons = await getIcons();
     spinner.style.display = "none";
 
     for (const sectionTask of getAllSectionTasks()) {
       createTaskSectionNode(
         sectionTask.title,
         sectionTask.desc,
-        sectionTask.icon
+        sectionTask.icon,
+        sectionTask.id
       );
-    }
-
-    for (const [name, [[icon]]] of Object.entries(window.icons)) {
-      const op = createOptionList(icon.svg_path, icon.name, select);
-      select.appendChild(op);
     }
 
     const subMenusIcon = document.querySelectorAll(".nav-item-menu");

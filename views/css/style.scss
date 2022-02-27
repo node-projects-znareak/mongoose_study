@@ -70,6 +70,7 @@ p {
   display: flex;
   justify-content: space-between;
   height: 100%;
+  padding: 0 1rem;
   padding-bottom: 3rem;
 
   &.modal-open {
@@ -194,10 +195,13 @@ p {
               padding: 6px 8px;
               border-radius: 4px;
               font-size: 13px;
-              display: flex;
-              align-items: center;
               color: #000;
               opacity: 0.8;
+
+              > div {
+                display: flex;
+                align-items: center;
+              }
 
               &:not(:last-child) {
                 margin-bottom: 3px;
@@ -357,6 +361,8 @@ p {
   label {
     margin-bottom: 0.5rem;
     display: block;
+    text-align: left;
+    font-size: 1rem;
   }
 }
 
@@ -420,13 +426,13 @@ textarea.input {
     position: absolute;
     background: #fff;
     border-radius: 4px;
-    top: -19rem;
+    top: -12.6rem;
     left: 0;
-    box-shadow: 0 0 0.232rem #0000003d;
+    box-shadow: 0 0 0.332rem #0000003d;
     z-index: 999;
     list-style: none;
     padding: 0.8rem 7px;
-    max-height: 300px;
+    max-height: 200px;
     overflow-y: auto;
     user-select: none;
     width: 100%;

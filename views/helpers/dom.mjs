@@ -1,11 +1,14 @@
-import { getAllsTask, getAllSectionTasks } from "./tasks.mjs";
+import {
+  getAllsTask,
+  getAllSectionTasks,
+  deleteSectionTask,
+  getSectionTask,
+} from "./tasks.mjs";
 import ICONS from "./icons.mjs";
+
 export const getNode = (id) => document.getElementById(id);
-
 export const selector = (select) => document.querySelector(select);
-
 export const selectorAll = (select) => document.querySelectorAll(select);
-
 const inputIcon = getNode("_icon");
 
 export const on = (node) => {
@@ -38,12 +41,13 @@ export const createElement = (initObj) => {
   return element;
 };
 
-export function createTaskSectionNode(title, desc, icon) {
+export function createTaskSectionNode(title, desc, icon, id) {
   const [[_icon]] = window.icons[icon];
   const sectionTasksList = getNode("sections");
   const li = createElement({
     tag: "li",
     title: desc,
+    attributes: [{ key: "data-section-id", value: id }],
   });
   li.insertAdjacentHTML("afterbegin", _icon.svg_path);
 
@@ -79,30 +83,71 @@ export function createTaskSectionNode(title, desc, icon) {
 
   for (const { icon, title, ...args } of OPTIONS) {
     const op = document.createElement("li");
-    // console.log(title +"\n")
-    // innerHTML
     const spanTitle = createElement({
       tag: "div",
       innerHTML: `${icon}<span>${title}</span>`,
     });
     op.appendChild(spanTitle);
-    op.addEventListener("click", (e) => {
-      console.log(e)
+    on(op).click(() => {
       if (title === "Eliminar") {
-        console.log("eliminar");
+        deleteSectionTask(id);
         li.remove();
       } else {
-        console.log("editar");
+        const sectionTask = getSectionTask(id);
+        const [icon] = window.icons[sectionTask.icon][0];
+        console.log(sectionTask);
+        Swal.fire({
+          icon: "question",
+          title: "Editar categoría",
+          text: "Por favor introducir los campos a continuación:",
+          html: /*html*/ `
+            <form id="form-create">
+              <div class="input-row">
+                <div class="input-group">
+                  <label for="title">Título de la categoría</label>
+                  <input
+                    type="text"
+                    class="input"
+                    id="title"
+                    name="title"
+                    value="${sectionTask.title}"
+                    required
+                  />
+                </div>
+
+                <div class="input-group">
+                  <label for="desc">Descripción de la categoría</label>
+                  <textarea
+                    type="text"
+                    class="input"
+                    id="desc"
+                    name="desc"
+                    required
+                  >${sectionTask.desc}</textarea>
+                </div>
+
+                <div class="input-group">
+                  <input
+                    type="hidden"
+                    form="form-create"
+                    name="icon"
+                    value="${sectionTask.icon}"
+                    id="_icon"
+                  />
+                  <div class="input dropdown">
+                    <span for="icon">${icon.svg_path} ${sectionTask.icon}</span>
+                    <ul id="icon"></ul>
+                  </div>
+                </div>
+              </div>
+            </form>
+          `,
+        });
+        loadOptionListIcons();
       }
     });
-    // op.innerHTML = `${icon}<span>${title}</span>`;
     navItemSubMenu_menu.appendChild(op);
   }
-
-  // navItemSubMenu_menu.addEventListener("click", ()=>{
-  //   console.log("click!")
-
-  // })
 
   navItemSubMenu.appendChild(navItemSubMenu_menu);
   navItemMenu.appendChild(navItemSubMenu);
@@ -114,14 +159,16 @@ export function createTaskSectionNode(title, desc, icon) {
 
 export function createOptionList(icon, name, select) {
   const op = document.createElement("li");
-  op.setAttribute("data-icon", icon.name);
+  op.setAttribute("data-icon", name);
   op.insertAdjacentHTML("afterbegin", `${icon} <span>${name}</span>`);
-  op.addEventListener("click", () => {
-    select.parentNode.querySelector("span").innerHTML = op.innerHTML;
+  const dropdownContainer = select.parentNode;
+  const containerSelect = dropdownContainer.parentNode;
+  const inputIcon = containerSelect.querySelector("#_icon");
+  on(op).click(() => {
+    dropdownContainer.querySelector("span").innerHTML = op.innerHTML;
     inputIcon.value = op.querySelector("span").textContent;
   });
-
-  return op;
+  select.appendChild(op);
 }
 
 export function saveJSONFile(content, name) {
@@ -138,4 +185,16 @@ export function saveTasks() {
 
 export function saveSectionTasks() {
   saveJSONFile(getAllSectionTasks(), "section_tasks.json");
+}
+
+export async function getIcons() {
+  const req = await fetch("./icons/icons.json");
+  const json = await req.json();
+  return json;
+}
+
+export function loadOptionListIcons() {
+  for (const [name, [[icon]]] of Object.entries(window.icons)) {
+    createOptionList(icon.svg_path, icon.name, getNode("icon"));
+  }
 }
