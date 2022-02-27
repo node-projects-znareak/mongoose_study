@@ -92,7 +92,6 @@ export function deleteSectionTask(sectionId) {
   const sectionTasksFilter = sectionTasks.filter(
     (sectionTask) => sectionTask.id !== sectionId
   );
-
   setSectionTasks(sectionTasksFilter);
   deleteTasksBySection(sectionId);
   return sectionTasksFilter;
@@ -120,7 +119,7 @@ export function getFirstSectionId() {
   return getAllSectionTasks()[0]?.id || 1;
 }
 
-function getLastSectionId() {
+export function getLastSectionId() {
   const sectionTasks = getAllSectionTasks();
   const len = sectionTasks.length;
   const lastId = sectionTasks[len - 1]?.id;

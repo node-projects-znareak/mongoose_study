@@ -3,7 +3,10 @@ import {
   getAllSectionTasks,
   deleteSectionTask,
   getSectionTask,
+  editSectionTask,
+  getLastSectionId,
 } from "./tasks.mjs";
+import { Eggy } from "../js/vendors/eggy.mjs";
 import ICONS from "./icons.mjs";
 
 export const getNode = (id) => document.getElementById(id);
@@ -47,7 +50,7 @@ export function createTaskSectionNode(title, desc, icon, id) {
   const li = createElement({
     tag: "li",
     title: desc,
-    attributes: [{ key: "data-section-id", value: id }],
+    attributes: [{ key: "data-section-id", value: getLastSectionId() }],
   });
   li.insertAdjacentHTML("afterbegin", _icon.svg_path);
 
@@ -90,8 +93,18 @@ export function createTaskSectionNode(title, desc, icon, id) {
     op.appendChild(spanTitle);
     on(op).click(() => {
       if (title === "Eliminar") {
-        deleteSectionTask(id);
-        li.remove();
+        Swal.fire({
+          title: "Eliminar categoría",
+          icon: "warning",
+          text: "¿Seguro que desea eliminar esta categoría?",
+          confirmButtonText: "Si",
+          showDenyButton: true,
+        }).then((res) => {
+          if (res.isConfirmed) {
+            deleteSectionTask(id);
+            li.remove();
+          }
+        });
       } else {
         const sectionTask = getSectionTask(id);
         const [icon] = window.icons[sectionTask.icon][0];
@@ -142,6 +155,23 @@ export function createTaskSectionNode(title, desc, icon, id) {
               </div>
             </form>
           `,
+        }).then((res) => {
+          if (res.isConfirmed) {
+            const formCreate = getNode("form-create");
+            const sectionTask = {
+              title: formCreate.title.value,
+              desc: formCreate.desc.value,
+              icon: formCreate.icon.value,
+              id,
+            };
+            editSectionTask(sectionTask);
+            Eggy({
+              title: "Categoría editada",
+              message: "La categoría fue editada con exito",
+              type: "success",
+            });
+            setTimeout(() => window.location.reload(), 1000);
+          }
         });
         loadOptionListIcons();
       }
