@@ -119,16 +119,23 @@ export function getFirstSectionId() {
   return getAllSectionTasks()[0]?.id || 1;
 }
 
-export function getLastSectionId() {
+export function createSectionId() {
   const sectionTasks = getAllSectionTasks();
   const len = sectionTasks.length;
   const lastId = sectionTasks[len - 1]?.id;
   return lastId ? lastId + 1 : 1;
 }
 
+export function getLastSectionId() {
+  const sectionTasks = getAllSectionTasks();
+  const len = sectionTasks.length;
+  const lastId = sectionTasks[len - 1]?.id;
+  return lastId !== undefined ? lastId : 1;
+}
+
 export function addSectionTask(sectionTask) {
   const sectionTasks = getAllSectionTasks();
-  sectionTask.id = getLastSectionId();
+  sectionTask.id = createSectionId();
   sectionTasks.push(sectionTask);
   setSectionTasks(sectionTasks);
 }

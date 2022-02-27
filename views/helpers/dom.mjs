@@ -46,11 +46,12 @@ export const createElement = (initObj) => {
 
 export function createTaskSectionNode(title, desc, icon, id) {
   const [[_icon]] = window.icons[icon];
+  const _id = id !== undefined ? id : getLastSectionId();
   const sectionTasksList = getNode("sections");
   const li = createElement({
     tag: "li",
     title: desc,
-    attributes: [{ key: "data-section-id", value: getLastSectionId() }],
+    attributes: [{ key: "data-section-id", value: _id }],
   });
   li.insertAdjacentHTML("afterbegin", _icon.svg_path);
 
@@ -99,20 +100,23 @@ export function createTaskSectionNode(title, desc, icon, id) {
           text: "¿Seguro que desea eliminar esta categoría?",
           confirmButtonText: "Si",
           showDenyButton: true,
+          showCloseButton: true,
         }).then((res) => {
           if (res.isConfirmed) {
-            deleteSectionTask(id);
+            deleteSectionTask(_id);
             li.remove();
           }
         });
       } else {
-        const sectionTask = getSectionTask(id);
+        const sectionTask = getSectionTask(_id);
         const [icon] = window.icons[sectionTask.icon][0];
         console.log(sectionTask);
+
         Swal.fire({
           icon: "question",
           title: "Editar categoría",
           text: "Por favor introducir los campos a continuación:",
+          showCloseButton: true,
           html: /*html*/ `
             <form id="form-create">
               <div class="input-row">
@@ -162,7 +166,7 @@ export function createTaskSectionNode(title, desc, icon, id) {
               title: formCreate.title.value,
               desc: formCreate.desc.value,
               icon: formCreate.icon.value,
-              id,
+              id: _id,
             };
             editSectionTask(sectionTask);
             Eggy({
