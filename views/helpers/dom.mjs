@@ -5,6 +5,7 @@ import {
   getSectionTask,
   editSectionTask,
   getLastSectionId,
+  changeCurrentSectionId,
 } from "./tasks.mjs";
 import { Eggy } from "../js/vendors/eggy.mjs";
 import ICONS from "./icons.mjs";
@@ -12,7 +13,6 @@ import ICONS from "./icons.mjs";
 export const getNode = (id) => document.getElementById(id);
 export const selector = (select) => document.querySelector(select);
 export const selectorAll = (select) => document.querySelectorAll(select);
-const inputIcon = getNode("_icon");
 
 export const on = (node) => {
   return {
@@ -24,6 +24,9 @@ export const on = (node) => {
     },
     submit(cb) {
       node.addEventListener("submit", cb, false);
+    },
+    change(cb) {
+      node.addEventListener("change", cb, false);
     },
   };
 };
@@ -45,16 +48,6 @@ export const createElement = (initObj) => {
 };
 
 export function createTaskSectionNode(title, desc, icon, id) {
-  const [[_icon]] = window.icons[icon];
-  const _id = id !== undefined ? id : getLastSectionId();
-  const sectionTasksList = getNode("sections");
-  const li = createElement({
-    tag: "li",
-    title: desc,
-    attributes: [{ key: "data-section-id", value: _id }],
-  });
-  li.insertAdjacentHTML("afterbegin", _icon.svg_path);
-
   const OPTIONS = [
     {
       title: "Editar",
@@ -65,6 +58,16 @@ export function createTaskSectionNode(title, desc, icon, id) {
       icon: ICONS.DELETE,
     },
   ];
+  const [[_icon]] = window.icons[icon];
+  const _id = id !== undefined ? id : getLastSectionId();
+  const sectionTasksList = getNode("sections");
+  const li = createElement({
+    tag: "li",
+    title: desc,
+    attributes: [{ key: "data-section-id", value: _id }],
+  });
+  li.insertAdjacentHTML("afterbegin", _icon.svg_path);
+
   const spanText = createElement({ tag: "span", textContent: title });
 
   const navItemMenu = createElement({
@@ -188,6 +191,13 @@ export function createTaskSectionNode(title, desc, icon, id) {
 
   li.appendChild(spanText);
   li.appendChild(navItemMenu);
+
+  on(li).click((e) => {
+    selector("li.active")?.classList?.remove("active");
+    li.classList.add("active");
+    changeCurrentSectionId(_id);
+  });
+
   sectionTasksList.appendChild(li);
 }
 
@@ -203,6 +213,47 @@ export function createOptionList(icon, name, select) {
     inputIcon.value = op.querySelector("span").textContent;
   });
   select.appendChild(op);
+}
+
+export function createTask({ title, desc, date, status, id, sectionId }) {
+  const tasksContainer = getNode("tasks");
+  const taskContainer = createElement({
+    tag: "div",
+    className: "task",
+    attributes: [
+      { key: "data-task-id", value: id },
+      { key: "data-task-section-id", value: sectionId },
+      { key: "data-task-status", value: status },
+    ],
+  });
+  const taskTitleContainer = createElement({
+    tag: "div",
+    className: "task-title",
+  });
+  const h3 = createElement({ tag: "h3", textContent: title });
+  const taskContent = createElement({
+    tag: "p",
+    textContent: desc,
+    className: "task-content",
+  });
+  const taskFooter = createElement({
+    tag: "footer",
+    className: "task-footer",
+    innerHTML: ICONS.DATE,
+  });
+  const dateTime = createElement({
+    tag: "time",
+    className: "task-date",
+    textContent: date,
+    attributes: [{ key: "datetime", value: date }],
+  });
+
+  taskTitleContainer.appendChild(h3);
+  taskContainer.appendChild(taskTitleContainer);
+  taskContainer.appendChild(taskContent);
+  taskFooter.appendChild(dateTime);
+  taskContainer.appendChild(taskFooter);
+  tasksContainer.appendChild(taskContainer);
 }
 
 export function saveJSONFile(content, name) {

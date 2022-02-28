@@ -139,3 +139,13 @@ export function addSectionTask(sectionTask) {
   sectionTasks.push(sectionTask);
   setSectionTasks(sectionTasks);
 }
+
+export function getCurrentSectionId() {
+  const id = localStorage.getItem("category_id");
+
+  return id !== null ? Number(id) : null;
+}
+
+export function changeCurrentSectionId(sectionId) {
+  localStorage.setItem("category_id", sectionId);
+}

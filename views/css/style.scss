@@ -80,6 +80,10 @@ p {
   }
 }
 
+.category-title {
+  margin: 1.5rem 0 1rem 0.7rem;
+}
+
 .nav {
   flex-shrink: 0;
   flex-basis: 300px;
@@ -127,7 +131,6 @@ p {
     user-select: none;
     display: flex;
     flex-direction: column;
-    margin-top: 1rem;
     list-style: none;
     // overflow-y: auto;
     padding-right: 0.8rem;
@@ -236,7 +239,8 @@ p {
         }
       }
 
-      &:hover {
+      &:hover,
+      &.active {
         background-color: rgba(238, 238, 238, 0.158);
 
         .nav-item-menu {
@@ -498,6 +502,11 @@ textarea.input {
     background-color: #0039d7;
     border-color: #0039d7;
   }
+
+  &.btn-inline {
+    display: inline-block;
+    width: auto;
+  }
 }
 
 .btn-exports,
@@ -516,6 +525,10 @@ textarea.input {
   }
 }
 
+.btn-create-task {
+  margin-bottom: 1rem;
+}
+
 @supports (-webkit-appearance: none) or (-moz-appearance: none) {
   input[type="checkbox"],
   input[type="radio"] {
@@ -531,7 +544,6 @@ textarea.input {
     -webkit-appearance: none;
     -moz-appearance: none;
     height: 18px;
-
     outline: none;
     display: inline-block;
     vertical-align: top;
@@ -606,29 +618,10 @@ textarea.input {
         --r: 43deg;
       }
     }
-    &.switch {
-      width: 38px;
-      border-radius: 11px;
-      &:after {
-        left: 2px;
-        top: 2px;
-        border-radius: 50%;
-        width: 15px;
-        height: 15px;
-        background: var(--ab, var(--border));
-        transform: translateX(var(--x, 0));
-      }
-      &:checked {
-        --ab: var(--active-inner);
-        --x: 17px;
-      }
-      &:disabled {
-        &:not(:checked) {
-          &:after {
-            opacity: 0.6;
-          }
-        }
-      }
+    &.white {
+      --background: #fff;
+      --active: rgb(196, 196, 196);
+      --active-inner: rgba(0, 0, 0, 0.685);
     }
   }
   input[type="radio"] {
@@ -689,15 +682,15 @@ textarea.input {
 .content {
   margin-left: 2rem;
   margin-top: 3.5rem;
+  flex-grow: 1;
 }
 
 .tasks {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
 
   .task {
-    width: calc((100% / 3) - 5px);
+    width: calc((100% / 3) - 6px);
     border-radius: 4px;
     font-size: 13px;
     padding: 1rem;
@@ -706,6 +699,7 @@ textarea.input {
     margin-bottom: 0.7rem;
     position: relative;
     word-break: break-all;
+    margin: 0 3px 10px 3px;
 
     &.task-finished {
       .task-done {
@@ -730,17 +724,6 @@ textarea.input {
       color: rgba(238, 238, 238, 0.842);
     }
 
-    .task-status {
-      margin-top: 0.7rem;
-      display: flex;
-      align-items: center;
-
-      label {
-        display: block;
-        margin-left: 5px;
-      }
-    }
-
     .task-footer {
       border-top: 1px rgba(238, 238, 238, 0.26) solid;
       margin-top: 0.4rem;
@@ -755,6 +738,17 @@ textarea.input {
       display: block;
       margin-left: 5px;
     }
+  }
+}
+
+.task-status {
+  margin-top: 0.7rem;
+  display: flex;
+  align-items: center;
+
+  label {
+    display: block;
+    margin-left: 5px;
   }
 }
 

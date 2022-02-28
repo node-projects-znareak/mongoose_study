@@ -1,16 +1,24 @@
-import { addSectionTask } from "../helpers/tasks.mjs";
+import {
+  addSectionTask,
+  addTask,
+  getCurrentSectionId,
+  getTaskBySection,
+} from "../helpers/tasks.mjs";
 import {
   createTaskSectionNode,
   saveSectionTasks,
   loadOptionListIcons,
   getNode,
   on,
+  selector,
+  createTask,
 } from "../helpers/dom.mjs";
 import { Eggy } from "./vendors/eggy.mjs";
 
 window.addEventListener("DOMContentLoaded", () => {
   const btnExportTasks = getNode("export-sections");
   const btnToggleModal = getNode("btn-create");
+  const btnCreateTask = getNode("btn-create-task");
 
   on(btnExportTasks).click(saveSectionTasks);
   on(btnToggleModal).click(() => {
@@ -88,4 +96,88 @@ window.addEventListener("DOMContentLoaded", () => {
 
     loadOptionListIcons();
   });
+
+  on(btnCreateTask).click(() => {
+    Swal.fire({
+      title: "Crear tarea",
+      icon: "question",
+      text: "A continuación para crear una tarea debe ser rellanado los campos:",
+      confirmButtonText: "Crear",
+      showCloseButton: true,
+      showDenyButton: true,
+      denyButtonText: "Cancelar",
+      html: /*html*/ `
+        <form id="form-create-task">
+          <div class="input-row">
+            <div class="input-group">
+              <label for="title">Título de la tarea</label>
+              <input
+                type="text"
+                class="input"
+                id="title"
+                name="title"
+                placeholder="Hola! soy una tarea"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label for="desc">Descripción de la tarea</label>
+              <textarea
+                type="text"
+                class="input"
+                id="desc"
+                name="desc"
+                placeholder="Puedes escribir más aquí!"
+                required
+              ></textarea>
+            </div>
+
+            <div class="task-status" style="margin-left:2px;">
+              <input type="checkbox" name="status" class="checkbox white" id="task-status"> 
+              <label for="task-status">
+                Incompleta
+              </label>
+            </div>
+          </div>
+      </form>
+      `,
+    }).then((res) => {
+      if (res.isConfirmed) {
+        const formTask = getNode("form-create-task");
+        const task = {
+          title: formTask.title.value,
+          desc: formTask.desc.value,
+          status: formTask.status.checked,
+          sectionId: getCurrentSectionId(),
+          date: new Date().toLocaleDateString(),
+        };
+
+        addTask(task);
+        Eggy({
+          title: "Tarea creada",
+          message: "La tarea fue creada y añadida con exito",
+          type: "success",
+        });
+        setTimeout(() => window.location.reload(), 1000);
+      }
+    });
+
+    const chkTaskStatus = getNode("task-status");
+    const label = selector("label[for='task-status']");
+    on(chkTaskStatus).change((e) => {
+      if (e.target.checked) {
+        label.textContent = "Terminada";
+      } else {
+        label.textContent = "Incompleta";
+      }
+    });
+  });
+
+  const currentCategory = getCurrentSectionId();
+  const tasks = getTaskBySection(currentCategory);
+
+  for (const task of tasks) {
+    createTask(task);
+  }
 });
