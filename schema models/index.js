@@ -27,8 +27,25 @@ async function app() {
   const remove = await Coords.deleteOne({}).where("x").eq(1693);
   //   console.log(remove);
 
-  const find2 = await Coords.find({}).where("y").gte(5000).lte(6000).select("y -_id");
-  console.log(find2);
+  const find2 = await Coords.find({})
+    .where("y")
+    .gte(5000)
+    .lte(6000)
+    .select("y -_id");
+  //console.log(find2);
+
+  const updated2 = await Coords.findOneAndUpdate(
+    { _id: "6217e8591814df8a32eb382e" },
+    { z: 300 },
+    { isNew: true }
+  );
+  //console.log(updated2);
+
+  coords1.save((err, doc) => {
+    if (err) throw new Error(err);
+    console.log("Guardado!");
+    console.log(doc);
+  });
 }
 
 module.exports = app;
