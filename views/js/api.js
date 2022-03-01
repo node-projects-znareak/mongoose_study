@@ -1,6 +1,6 @@
-import { getAllSectionTasks } from "../helpers/tasks.mjs";
+import { getAllSectionTasks, getCurrentSectionId } from "../helpers/tasks.mjs";
 import { createTaskSectionNode, getIcons } from "../helpers/dom.mjs";
-import { getNode } from "../helpers/dom.mjs";
+import { getNode, selector, selectorAll } from "../helpers/dom.mjs";
 
 window.addEventListener("DOMContentLoaded", () => {
   (async () => {
@@ -17,7 +17,11 @@ window.addEventListener("DOMContentLoaded", () => {
       );
     }
 
-    const subMenusIcon = document.querySelectorAll(".nav-item-menu");
+    const currentCategory = getCurrentSectionId();
+    const activeCategory = selector(`li[data-section-id="${currentCategory}"]`);
+    activeCategory && activeCategory.classList.add("active");
+
+    const subMenusIcon = selectorAll(".nav-item-menu");
 
     function calculatePosition(target) {
       const domRect = target.getBoundingClientRect();

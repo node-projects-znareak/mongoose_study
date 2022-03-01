@@ -14,6 +14,7 @@ import {
   createTask,
 } from "../helpers/dom.mjs";
 import { Eggy } from "./vendors/eggy.mjs";
+import { validateCategory, validateTask } from "../helpers/validations.mjs";
 
 window.addEventListener("DOMContentLoaded", () => {
   const btnExportTasks = getNode("export-sections");
@@ -79,18 +80,20 @@ window.addEventListener("DOMContentLoaded", () => {
           icon: formCreate.icon.value,
         };
 
-        addSectionTask(sectionTask);
-        createTaskSectionNode(
-          sectionTask.title,
-          sectionTask.desc,
-          sectionTask.icon
-        );
+        if (validateCategory(sectionTask)) {
+          addSectionTask(sectionTask);
+          createTaskSectionNode(
+            sectionTask.title,
+            sectionTask.desc,
+            sectionTask.icon
+          );
 
-        Eggy({
-          title: "Categoría creada",
-          message: "La categoría fue creada y añadida con exito",
-          type: "success",
-        });
+          Eggy({
+            title: "Categoría creada",
+            message: "La categoría fue creada y añadida con exito",
+            type: "success",
+          });
+        }
       }
     });
 
@@ -153,13 +156,15 @@ window.addEventListener("DOMContentLoaded", () => {
           date: new Date().toLocaleDateString(),
         };
 
-        addTask(task);
-        Eggy({
-          title: "Tarea creada",
-          message: "La tarea fue creada y añadida con exito",
-          type: "success",
-        });
-        setTimeout(() => window.location.reload(), 1000);
+        if (validateTask(task)) {
+          addTask(task);
+          Eggy({
+            title: "Tarea creada",
+            message: "La tarea fue creada y añadida con exito",
+            type: "success",
+          });
+          setTimeout(() => window.location.reload(), 1000);
+        }
       }
     });
 

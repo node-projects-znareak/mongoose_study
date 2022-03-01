@@ -529,6 +529,22 @@ textarea.input {
   margin-bottom: 1rem;
 }
 
+.img-fluid {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+}
+
+.select-category {
+  max-width: 500px;
+  margin: auto;
+
+  > .select-category-title {
+    text-align: center;
+    margin-top: -2rem;
+  }
+}
+
 @supports (-webkit-appearance: none) or (-moz-appearance: none) {
   input[type="checkbox"],
   input[type="radio"] {

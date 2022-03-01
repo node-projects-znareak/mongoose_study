@@ -15,3 +15,8 @@ export function convertToSlug(str) {
 
   return str;
 }
+
+export function ErrorAlert(msj, err = "Ocurrió un error") {
+  Swal.fire(err, msj, "error");
+  return false;
+}
