@@ -71,7 +71,6 @@ export function createTaskSectionNode(title, desc, icon, id) {
   li.insertAdjacentHTML("afterbegin", _icon.svg_path);
 
   const spanText = createElement({ tag: "span", textContent: title });
-
   const navItemMenu = createElement({
     tag: "div",
     className: "nav-item-menu",
@@ -84,7 +83,6 @@ export function createTaskSectionNode(title, desc, icon, id) {
     tag: "div",
     className: "nav-item-submenu",
   });
-
   const navItemSubMenu_menu = createElement({
     tag: "ul",
     className: "nav-item-submenu-menu",
@@ -198,6 +196,7 @@ export function createTaskSectionNode(title, desc, icon, id) {
     selector("li.active")?.classList?.remove("active");
     li.classList.add("active");
     changeCurrentSectionId(_id);
+    showTaskBySection();
   });
 
   sectionTasksList.appendChild(li);
@@ -263,7 +262,7 @@ export function showTaskBySection() {
   const tasks = getTaskBySection(currentCategory);
   const selectCategory = selector(".select-category");
   const tasksContainer = getNode("tasks");
-
+  console.log({ tasks, currentCategory });
   tasksContainer.innerHTML = "";
 
   if (tasks.length) {
