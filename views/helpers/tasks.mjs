@@ -94,6 +94,7 @@ export function deleteSectionTask(sectionId) {
   );
   setSectionTasks(sectionTasksFilter);
   deleteTasksBySection(sectionId);
+  deleteCurrentSectionId();
   return sectionTasksFilter;
 }
 
@@ -148,4 +149,8 @@ export function getCurrentSectionId() {
 
 export function changeCurrentSectionId(sectionId) {
   localStorage.setItem("category_id", sectionId);
+}
+
+export function deleteCurrentSectionId() {
+  localStorage.removeItem("category_id");
 }

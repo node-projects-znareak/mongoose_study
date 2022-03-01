@@ -107,7 +107,13 @@ export function createTaskSectionNode(title, desc, icon, id) {
         }).then((res) => {
           if (res.isConfirmed) {
             deleteSectionTask(_id);
-            li.remove();
+
+            Eggy({
+              title: "Categoría eliminada",
+              message: "La categoría fue eliminada con exito",
+              type: "success",
+            });
+            setTimeout(() => window.location.reload(), 1000);
           }
         });
       } else {
