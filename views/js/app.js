@@ -2,7 +2,6 @@ import {
   addSectionTask,
   addTask,
   getCurrentSectionId,
-  getTaskBySection,
 } from "../helpers/tasks.mjs";
 import {
   createTaskSectionNode,
@@ -11,7 +10,6 @@ import {
   getNode,
   on,
   selector,
-  createTask,
 } from "../helpers/dom.mjs";
 import { Eggy } from "./vendors/eggy.mjs";
 import { validateCategory, validateTask } from "../helpers/validations.mjs";
@@ -178,11 +176,4 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
-
-  const currentCategory = getCurrentSectionId();
-  const tasks = getTaskBySection(currentCategory);
-
-  for (const task of tasks) {
-    createTask(task);
-  }
 });

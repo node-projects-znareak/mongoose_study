@@ -1,10 +1,23 @@
-import { getAllSectionTasks, getCurrentSectionId } from "../helpers/tasks.mjs";
-import { createTaskSectionNode, getIcons } from "../helpers/dom.mjs";
-import { getNode, selector, selectorAll } from "../helpers/dom.mjs";
+import {
+  getAllSectionTasks,
+  getCurrentSectionId,
+  getTaskBySection,
+} from "../helpers/tasks.mjs";
+
+import {
+  createTaskSectionNode,
+  getIcons,
+  getNode,
+  selector,
+  selectorAll,
+  showTaskBySection
+} from "../helpers/dom.mjs";
 
 window.addEventListener("DOMContentLoaded", () => {
   (async () => {
     const spinner = getNode("spinner");
+    const currentCategory = getCurrentSectionId();
+    
     window.icons = await getIcons();
     spinner.style.display = "none";
 
@@ -17,9 +30,12 @@ window.addEventListener("DOMContentLoaded", () => {
       );
     }
 
-    const currentCategory = getCurrentSectionId();
     const activeCategory = selector(`li[data-section-id="${currentCategory}"]`);
-    activeCategory && activeCategory.classList.add("active");
+
+    if (currentCategory) {
+      activeCategory.classList.add("active");
+      showTaskBySection();
+    }
 
     const subMenusIcon = selectorAll(".nav-item-menu");
 

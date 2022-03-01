@@ -6,6 +6,8 @@ import {
   editSectionTask,
   getLastSectionId,
   changeCurrentSectionId,
+  getCurrentSectionId,
+  getTaskBySection,
 } from "./tasks.mjs";
 import { Eggy } from "../js/vendors/eggy.mjs";
 import ICONS from "./icons.mjs";
@@ -254,6 +256,24 @@ export function createTask({ title, desc, date, status, id, sectionId }) {
   taskFooter.appendChild(dateTime);
   taskContainer.appendChild(taskFooter);
   tasksContainer.appendChild(taskContainer);
+}
+
+export function showTaskBySection() {
+  const currentCategory = getCurrentSectionId();
+  const tasks = getTaskBySection(currentCategory);
+  const selectCategory = selector(".select-category");
+  const tasksContainer = getNode("tasks");
+
+  tasksContainer.innerHTML = "";
+
+  if (tasks.length) {
+    selectCategory.style.display = "none";
+    for (const task of tasks) {
+      createTask(task);
+    }
+  } else {
+    selectCategory.style.display = "block";
+  }
 }
 
 export function saveJSONFile(content, name) {
