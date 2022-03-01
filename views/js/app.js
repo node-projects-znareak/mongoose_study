@@ -73,8 +73,8 @@ window.addEventListener("DOMContentLoaded", () => {
       if (res.isConfirmed) {
         const formCreate = getNode("form-create");
         const sectionTask = {
-          title: formCreate.title.value,
-          desc: formCreate.desc.value,
+          title: formCreate.title.value.trim(),
+          desc: formCreate.desc.value.trim(),
           icon: formCreate.icon.value,
         };
 
@@ -147,8 +147,8 @@ window.addEventListener("DOMContentLoaded", () => {
       if (res.isConfirmed) {
         const formTask = getNode("form-create-task");
         const task = {
-          title: formTask.title.value,
-          desc: formTask.desc.value,
+          title: formTask.title.value.trim(),
+          desc: formTask.desc.value.trim(),
           status: formTask.status.checked,
           sectionId: getCurrentSectionId(),
           date: new Date().toLocaleDateString(),
