@@ -6,10 +6,10 @@ const methods = require("./static and instace methods");
 const virtuals = require("./virtuals");
 const models = require("./schema models");
 const populate = require("./populate");
-
+const modelsAndDocuments = require("./models and documents");
 (async () => {
   console.clear();
   await connection();
 
-  await models();
+  await modelsAndDocuments();
 })();
