@@ -1,8 +1,4 @@
-import {
-  getAllSectionTasks,
-  getCurrentSectionId,
-  getTaskBySection,
-} from "../helpers/tasks.mjs";
+import { getAllSectionTasks, getCurrentSectionId } from "../helpers/tasks.mjs";
 
 import {
   createTaskSectionNode,
@@ -10,18 +6,25 @@ import {
   getNode,
   selector,
   selectorAll,
-  showTaskBySection
+  showTaskBySection,
+  toggleBtnCreateTask,
+  toggleCreateCategoryBanner,
 } from "../helpers/dom.mjs";
 
 window.addEventListener("DOMContentLoaded", () => {
   (async () => {
     const spinner = getNode("spinner");
     const currentCategory = getCurrentSectionId();
-    
+    const sectionTasks = getAllSectionTasks();
+
     window.icons = await getIcons();
     spinner.style.display = "none";
 
-    for (const sectionTask of getAllSectionTasks()) {
+    if (sectionTasks.length) {
+      toggleCreateCategoryBanner(true);
+    }
+
+    for (const sectionTask of sectionTasks) {
       createTaskSectionNode(
         sectionTask.title,
         sectionTask.desc,
@@ -35,6 +38,7 @@ window.addEventListener("DOMContentLoaded", () => {
     if (currentCategory) {
       activeCategory.classList.add("active");
       showTaskBySection();
+      toggleBtnCreateTask();
     }
 
     const subMenusIcon = selectorAll(".nav-item-menu");

@@ -10,6 +10,7 @@ import {
   getNode,
   on,
   selector,
+  toggleCreateCategoryBanner
 } from "../helpers/dom.mjs";
 import { Eggy } from "./vendors/eggy.mjs";
 import { validateCategory, validateTask } from "../helpers/validations.mjs";
@@ -80,6 +81,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
         if (validateCategory(sectionTask)) {
           addSectionTask(sectionTask);
+          toggleCreateCategoryBanner(true);
           createTaskSectionNode(
             sectionTask.title,
             sectionTask.desc,

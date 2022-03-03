@@ -1,7 +1,7 @@
 import { ErrorAlert } from "./utils.mjs";
 
 const validateText = (str, msj) => {
-  const text = /^[A-Za-z0-9\s\.]*$/gi;
+  const text = /^[A-ZÀ-úa-z0-9\s\.]*$/gi;
   if (!text.test(str)) {
     ErrorAlert(`El campo ${msj} debe contener sólo letras y números`);
     return false;

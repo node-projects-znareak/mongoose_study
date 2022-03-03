@@ -8,6 +8,7 @@ import {
   changeCurrentSectionId,
   getCurrentSectionId,
   getTaskBySection,
+  getTaskCountBySection,
 } from "./tasks.mjs";
 import { Eggy } from "../js/vendors/eggy.mjs";
 import ICONS from "./icons.mjs";
@@ -199,10 +200,18 @@ export function createTaskSectionNode(title, desc, icon, id) {
   li.appendChild(navItemMenu);
 
   on(li).click((e) => {
+    const categorySectionTitle = selector(".select-category-title");
+
     selector("li.active")?.classList?.remove("active");
     li.classList.add("active");
     changeCurrentSectionId(_id);
-    showTaskBySection();
+    
+    const tasksLength = showTaskBySection();
+    if (categorySectionTitle && !tasksLength) {
+      categorySectionTitle.textContent = "No hay tareas en esta categoría";
+    }
+
+    toggleBtnCreateTask();
   });
 
   sectionTasksList.appendChild(li);
@@ -255,10 +264,18 @@ export function createTask({ title, desc, date, status, id, sectionId }) {
     attributes: [{ key: "datetime", value: date }],
   });
 
+  const taskDeleteBtn = createElement({
+    tag: "button",
+    className: "btn-task-delete",
+    innerHTML: ICONS.TRASH,
+    attributes: [{ key: "data-task-id", value: id }],
+  });
+
   taskTitleContainer.appendChild(h3);
   taskContainer.appendChild(taskTitleContainer);
   taskContainer.appendChild(taskContent);
   taskFooter.appendChild(dateTime);
+  taskFooter.appendChild(taskDeleteBtn);
   taskContainer.appendChild(taskFooter);
   tasksContainer.appendChild(taskContainer);
 }
@@ -279,6 +296,7 @@ export function showTaskBySection() {
   } else {
     selectCategory.style.display = "block";
   }
+  return tasks.length > 0;
 }
 
 export function saveJSONFile(content, name) {
@@ -306,5 +324,26 @@ export async function getIcons() {
 export function loadOptionListIcons() {
   for (const [name, [[icon]]] of Object.entries(window.icons)) {
     createOptionList(icon.svg_path, icon.name, getNode("icon"));
+  }
+}
+
+export function toggleCreateCategoryBanner(flag) {
+  const banner = selector(".create-section");
+  if (flag) {
+    return (banner.style.display = "none");
+  }
+
+  if (banner.style.display === "none") banner.style.display = "block";
+}
+
+export function toggleBtnCreateTask() {
+  const currentSection = getCurrentSectionId();
+  const btnCreateTasks = getNode("btn-create-task");
+  const tasksLength = getTaskCountBySection(currentSection);
+
+  if (!tasksLength) {
+    btnCreateTasks.style.display = "block";
+  } else {
+    btnCreateTasks.style.display = "none";
   }
 }

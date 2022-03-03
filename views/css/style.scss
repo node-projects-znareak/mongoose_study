@@ -506,6 +506,10 @@ textarea.input {
   &.btn-inline {
     display: inline-block;
     width: auto;
+    
+    &.btn-create-task {
+      display: none;
+    }
   }
 }
 
@@ -542,6 +546,25 @@ textarea.input {
   > .select-category-title {
     text-align: center;
     margin-top: -2rem;
+  }
+}
+
+.create-section {
+  width: 250px;
+  margin: auto;
+
+  .create-section-title {
+    margin-top: 0.8rem;
+  }
+
+  .create-section-title,
+  p {
+    text-align: center;
+  }
+
+  p {
+    font-size: 14px;
+    margin-top: 0.5rem;
   }
 }
 
@@ -753,6 +776,24 @@ textarea.input {
       font-size: 11px;
       display: block;
       margin-left: 5px;
+    }
+
+    .btn-task-delete {
+      margin-left: auto;
+      padding: 0;
+      border: 0;
+      background: none;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+
+      > svg {
+        width: 100%;
+        color: #ff1818;
+      }
     }
   }
 }
