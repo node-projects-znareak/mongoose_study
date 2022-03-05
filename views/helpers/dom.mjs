@@ -9,6 +9,7 @@ import {
   getCurrentSectionId,
   getTaskBySection,
   getTaskCountBySection,
+  deleteTask,
 } from "./tasks.mjs";
 import { Eggy } from "../js/vendors/eggy.mjs";
 import ICONS from "./icons.mjs";
@@ -50,15 +51,25 @@ export const createElement = (initObj) => {
   return element;
 };
 
+export const toArrayObject = (obj) => {
+  const entries = Object.entries(obj);
+  const parsed = entries.map(([key, value]) => ({ key, value }));
+  return parsed;
+};
+
 export function createTaskSectionNode(title, desc, icon, id) {
   const OPTIONS = [
     {
       title: "Editar",
       icon: ICONS.EDIT,
+      "aria-label": "Editar",
+      role: "button",
     },
     {
       title: "Eliminar",
       icon: ICONS.DELETE,
+      "aria-label": "Eliminar",
+      role: "button",
     },
   ];
   const [[_icon]] = window.icons[icon];
@@ -84,13 +95,17 @@ export function createTaskSectionNode(title, desc, icon, id) {
     tag: "div",
     className: "nav-item-submenu",
   });
+
   const navItemSubMenu_menu = createElement({
     tag: "ul",
     className: "nav-item-submenu-menu",
   });
 
   for (const { icon, title, ...args } of OPTIONS) {
-    const op = document.createElement("li");
+    const op = createElement({
+      tag: "li",
+      attributes: toArrayObject(args),
+    });
     const spanTitle = createElement({
       tag: "div",
       innerHTML: `${icon}<span>${title}</span>`,
@@ -205,7 +220,7 @@ export function createTaskSectionNode(title, desc, icon, id) {
     selector("li.active")?.classList?.remove("active");
     li.classList.add("active");
     changeCurrentSectionId(_id);
-    
+
     const tasksLength = showTaskBySection();
     if (categorySectionTitle && !tasksLength) {
       categorySectionTitle.textContent = "No hay tareas en esta categoría";
@@ -268,14 +283,43 @@ export function createTask({ title, desc, date, status, id, sectionId }) {
     tag: "button",
     className: "btn-task-delete",
     innerHTML: ICONS.TRASH,
-    attributes: [{ key: "data-task-id", value: id }],
+    attributes: [
+      { key: "data-task-id", value: id },
+      {
+        key: "aria-label",
+        value: "Eliminar tarea",
+      },
+    ],
+  });
+
+  const taskEditBtn = createElement({
+    tag: "button",
+    className: "btn-task-edit",
+    innerHTML: ICONS.PENCIL,
+    attributes: [
+      { key: "data-task-id", value: id },
+      {
+        key: "aria-label",
+        value: "Editar tarea",
+      },
+    ],
+  });
+
+  on(taskDeleteBtn).click(() => {
+    deleteTask(id, sectionId);
+    taskContainer.remove();
+  });
+  const containerButtons = createElement({
+    tag: "div",
+    className: "task-container-buttons",
+    childNodes: [taskEditBtn, taskDeleteBtn],
   });
 
   taskTitleContainer.appendChild(h3);
   taskContainer.appendChild(taskTitleContainer);
   taskContainer.appendChild(taskContent);
   taskFooter.appendChild(dateTime);
-  taskFooter.appendChild(taskDeleteBtn);
+  taskFooter.appendChild(containerButtons);
   taskContainer.appendChild(taskFooter);
   tasksContainer.appendChild(taskContainer);
 }

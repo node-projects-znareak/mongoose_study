@@ -84,6 +84,29 @@ p {
   margin: 1.5rem 0 1rem 0.7rem;
 }
 
+.toggler-menu {
+  margin-bottom: 1rem;
+  cursor: pointer;
+  display: none;
+
+  svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  @media screen and (max-width: 960px) {
+    display: inline-block;
+  }
+}
+
+.close-nav {
+  position: absolute;
+  cursor: pointer;
+  top: 22px;
+  right: 22px;
+  display: none;
+}
+
 .nav {
   flex-shrink: 0;
   flex-basis: 300px;
@@ -263,6 +286,31 @@ p {
     width: 1px;
     height: 100%;
     background-color: rgba(238, 238, 238, 0.356);
+  }
+
+  @media screen and (max-width: 960px) {
+    position: absolute;
+    z-index: 999;
+    background-color: #0f2027;
+    height: 100%;
+    left: -999px;
+    top: 0;
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem 2rem 0 2rem;
+    transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+    &.active {
+      left: 0;
+    }
+
+    &::before {
+      display: none;
+    }
+
+    .close-nav {
+      display: block;
+    }
   }
 }
 
@@ -506,7 +554,7 @@ textarea.input {
   &.btn-inline {
     display: inline-block;
     width: auto;
-    
+
     &.btn-create-task {
       display: none;
     }
@@ -778,22 +826,41 @@ textarea.input {
       margin-left: 5px;
     }
 
-    .btn-task-delete {
-      margin-left: auto;
-      padding: 0;
-      border: 0;
-      background: none;
-      width: 20px;
-      height: 20px;
+    .task-container-buttons {
       display: flex;
       align-items: center;
-      justify-content: center;
-      cursor: pointer;
+      margin-left: auto;
 
-      > svg {
-        width: 100%;
+      .btn-task-delete,
+      .btn-task-edit {
+        padding: 0;
+        border: 0;
+        background: none;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        > svg {
+          width: 100%;
+        }
+      }
+
+      .btn-task-delete > svg {
         color: #ff1818;
       }
+      .btn-task-edit > svg {
+        color: #fff;
+      }
+      .btn-task-edit {
+        margin-right: 5px;
+      }
+    }
+
+    @media screen and (max-width: 1070px) {
+      width: calc((100% / 2) - 6px);
     }
   }
 }

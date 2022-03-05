@@ -10,7 +10,7 @@ import {
   getNode,
   on,
   selector,
-  toggleCreateCategoryBanner
+  toggleCreateCategoryBanner,
 } from "../helpers/dom.mjs";
 import { Eggy } from "./vendors/eggy.mjs";
 import { validateCategory, validateTask } from "../helpers/validations.mjs";
@@ -19,6 +19,10 @@ window.addEventListener("DOMContentLoaded", () => {
   const btnExportTasks = getNode("export-sections");
   const btnToggleModal = getNode("btn-create");
   const btnCreateTask = getNode("btn-create-task");
+  const btnTogglerMenu = selector(".toggler-menu");
+  const container = selector(".container");
+  const closeMenu = selector(".close-nav");
+  const navMenu = selector(".nav");
 
   on(btnExportTasks).click(saveSectionTasks);
   on(btnToggleModal).click(() => {
@@ -177,5 +181,28 @@ window.addEventListener("DOMContentLoaded", () => {
         label.textContent = "Incompleta";
       }
     });
+  });
+
+  on(btnTogglerMenu).click(() => {
+    navMenu.classList.add("active");
+  });
+
+  on(closeMenu).click(() => {
+    navMenu.classList.remove("active");
+  });
+
+  on(document).click((e) => {
+    console.log(e.target);
+    // evitar que el boton de abrir menu vuelva a cerrar el menu
+    if (
+      e.target.isEqualNode(btnTogglerMenu) ||
+      btnTogglerMenu.contains(e.target) ||
+      navMenu.contains(e.target)
+    )
+      return;
+
+    if (navMenu.classList.contains("active")) {
+      navMenu.classList.remove("active");
+    }
   });
 });
