@@ -8,6 +8,20 @@ export function getAllsTask() {
   return JSON.parse(localStorage.getItem("task")) || [];
 }
 
+export function getTaskById(id) {
+  const tasks = getAllsTask();
+  const task = tasks.find((task) => task.id === id);
+  return task;
+}
+
+export function editTaskById(id, _task) {
+  const tasks = getAllsTask();
+  const tasksEdited = tasks.map((task) => {
+    return task.id === id ? { ...task, ..._task } : task;
+  });
+  setTasks(tasksEdited);
+}
+
 export function getLastTaskId() {
   const task = getAllsTask();
   const len = task.length;

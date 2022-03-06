@@ -5,26 +5,42 @@ import {
 } from "../helpers/tasks.mjs";
 import {
   createTaskSectionNode,
+  saveTasks,
   saveSectionTasks,
   loadOptionListIcons,
   getNode,
   on,
   selector,
   toggleCreateCategoryBanner,
+  importCategories,
 } from "../helpers/dom.mjs";
 import { Eggy } from "./vendors/eggy.mjs";
 import { validateCategory, validateTask } from "../helpers/validations.mjs";
 
 window.addEventListener("DOMContentLoaded", () => {
-  const btnExportTasks = getNode("export-sections");
+  const btnExportCategories = getNode("export-sections");
+  const btnExportTask = getNode("export-tasks");
+  const btnImportCategories = getNode("import-sections");
+
+  const btnImportCategoriesFile = getNode("import-section-file");
+
   const btnToggleModal = getNode("btn-create");
   const btnCreateTask = getNode("btn-create-task");
   const btnTogglerMenu = selector(".toggler-menu");
-  const container = selector(".container");
   const closeMenu = selector(".close-nav");
   const navMenu = selector(".nav");
 
-  on(btnExportTasks).click(saveSectionTasks);
+  on(btnExportCategories).click(saveSectionTasks);
+  on(btnExportTask).click(saveTasks);
+  on(btnImportCategories).click(() => {
+    btnImportCategoriesFile.click();
+  });
+
+  on(btnImportCategoriesFile).change(async (e) => {
+    const [file] = e.target.files;
+    await importCategories(file);
+  });
+
   on(btnToggleModal).click(() => {
     Swal.fire({
       icon: "question",
@@ -192,7 +208,6 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   on(document).click((e) => {
-    console.log(e.target);
     // evitar que el boton de abrir menu vuelva a cerrar el menu
     if (
       e.target.isEqualNode(btnTogglerMenu) ||

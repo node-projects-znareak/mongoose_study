@@ -10,9 +10,14 @@ import {
   getTaskBySection,
   getTaskCountBySection,
   deleteTask,
+  getTaskById,
+  editTaskById,
+  setSectionTasks,
 } from "./tasks.mjs";
 import { Eggy } from "../js/vendors/eggy.mjs";
+import { validateTask } from "../helpers/validations.mjs";
 import ICONS from "./icons.mjs";
+import { readFile, validateImportedFile } from "./utils.mjs";
 
 export const getNode = (id) => document.getElementById(id);
 export const selector = (select) => document.querySelector(select);
@@ -305,6 +310,79 @@ export function createTask({ title, desc, date, status, id, sectionId }) {
     ],
   });
 
+  on(taskEditBtn).click(() => {
+    const task = getTaskById(id);
+
+    Swal.fire({
+      title: "Editar tarea",
+      icon: "question",
+      text: "A continuación para editar una tarea debe ser rellanado los campos:",
+      confirmButtonText: "Editar",
+      showCloseButton: true,
+      showDenyButton: true,
+      denyButtonText: "Cancelar",
+      html: /*html*/ `
+        <form id="form-edit-task">
+          <div class="input-row">
+            <div class="input-group">
+              <label for="title">Título de la tarea</label>
+              <input
+                type="text"
+                class="input"
+                id="title"
+                name="title"
+                placeholder="Hola! soy una tarea"
+                value="${task.title}"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label for="desc">Descripción de la tarea</label>
+              <textarea
+                type="text"
+                class="input"
+                id="desc"
+                name="desc"
+                placeholder="Puedes escribir más aquí!"
+                required
+              >${task.desc}</textarea>
+            </div>
+
+            <div class="task-status" style="margin-left:2px;">
+              <input type="checkbox" name="status" class="checkbox white" id="task-status" ${
+                task.status ? "checked" : ""
+              }> 
+              <label for="task-status">
+                Incompleta
+              </label>
+            </div>
+          </div>
+      </form>
+      `,
+    }).then((res) => {
+      if (res.isConfirmed) {
+        const formTask = getNode("form-edit-task");
+        const task = {
+          title: formTask.title.value.trim(),
+          desc: formTask.desc.value.trim(),
+          status: formTask.status.checked,
+          sectionId: getCurrentSectionId(),
+        };
+
+        if (validateTask(task)) {
+          editTaskById(id, task);
+          Eggy({
+            title: "Tarea Editada",
+            message: "La tarea fue edita con exito",
+            type: "success",
+          });
+          setTimeout(() => window.location.reload(), 1000);
+        }
+      }
+    });
+  });
+
   on(taskDeleteBtn).click(() => {
     deleteTask(id, sectionId);
     taskContainer.remove();
@@ -329,7 +407,6 @@ export function showTaskBySection() {
   const tasks = getTaskBySection(currentCategory);
   const selectCategory = selector(".select-category");
   const tasksContainer = getNode("tasks");
-  console.log({ tasks, currentCategory });
   tasksContainer.innerHTML = "";
 
   if (tasks.length) {
@@ -357,6 +434,18 @@ export function saveTasks() {
 
 export function saveSectionTasks() {
   saveJSONFile(getAllSectionTasks(), "section_tasks.json");
+}
+
+export async function importCategories(fileJSON) {
+  if (validateImportedFile(fileJSON)) {
+    const currentCategories = getAllSectionTasks();
+    const result = await readFile(fileJSON);
+    const categoriesToImport = JSON.parse(result);
+
+    const totalCategories = [...currentCategories, ...categoriesToImport];
+    console.log(totalCategories);
+    setSectionTasks(totalCategories);
+  }
 }
 
 export async function getIcons() {
