@@ -13,6 +13,7 @@ import {
   getTaskById,
   editTaskById,
   setSectionTasks,
+  deleteDuplicateCategories,
 } from "./tasks.mjs";
 import { Eggy } from "../js/vendors/eggy.mjs";
 import { validateTask } from "../helpers/validations.mjs";
@@ -429,7 +430,12 @@ export function saveJSONFile(content, name) {
 }
 
 export function saveTasks() {
-  saveJSONFile(getAllsTask(), "tasks.json");
+  let tasks = getAllsTask();
+  tasks.map((task) => {
+    delete task.sectionId;
+    return task;
+  });
+  saveJSONFile(tasks, "tasks.json");
 }
 
 export function saveSectionTasks() {
@@ -442,9 +448,20 @@ export async function importCategories(fileJSON) {
     const result = await readFile(fileJSON);
     const categoriesToImport = JSON.parse(result);
 
-    const totalCategories = [...currentCategories, ...categoriesToImport];
+    const totalCategories = deleteDuplicateCategories(
+      currentCategories,
+      categoriesToImport
+    );
     console.log(totalCategories);
-    setSectionTasks(totalCategories);
+    if (totalCategories.length) {
+      setSectionTasks([...currentCategories, ...totalCategories]);
+      Eggy({
+        title: "Se importaron las categorías",
+        message: `Se importaron ${totalCategories.length} categorías`,
+        type: "success",
+      });
+      setTimeout(() => window.location.reload(), 1300);
+    }
   }
 }
 

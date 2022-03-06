@@ -168,3 +168,16 @@ export function changeCurrentSectionId(sectionId) {
 export function deleteCurrentSectionId() {
   localStorage.removeItem("category_id");
 }
+
+export function deleteDuplicateCategories(categoryArray1, categoriesArray2) {
+  const categories = categoriesArray2.filter((_category) => {
+    return !categoryArray1.some((category) => {
+      return (
+        category.id === _category.id &&
+        category.title.toLocaleLowerCase() ===
+          _category.title.toLocaleLowerCase()
+      );
+    });
+  });
+  return categories;
+}
