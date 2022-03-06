@@ -218,17 +218,10 @@ export function createTaskSectionNode(title, desc, icon, id) {
   li.appendChild(navItemMenu);
 
   on(li).click((e) => {
-    const categorySectionTitle = selector(".select-category-title");
-
     selector("li.active")?.classList?.remove("active");
     li.classList.add("active");
     changeCurrentSectionId(_id);
-
-    const tasksLength = showTaskBySection();
-    if (categorySectionTitle && !tasksLength) {
-      categorySectionTitle.textContent = "No hay tareas en esta categoría";
-    }
-
+    showTaskBySection();
     toggleBtnCreateTask();
   });
 
@@ -388,7 +381,7 @@ export function createTask({ title, desc, date, status, id, sectionId }) {
     taskContainer.remove();
     showTaskBySection();
   });
-  
+
   const containerButtons = createElement({
     tag: "div",
     className: "task-container-buttons",
@@ -411,6 +404,11 @@ export function showTaskBySection() {
   const tasksContainer = getNode("tasks");
   tasksContainer.innerHTML = "";
   selectCategory.style.display = tasks.length ? "none" : "block";
+  toggleBtnCreateTask()
+  if (!tasks.length) {
+    selectCategory.querySelector(".select-category-title").textContent =
+      "No hay tareas en esta categoría";
+  }
   if (tasks.length) {
     for (const task of tasks) createTask(task);
   }
