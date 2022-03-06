@@ -1,4 +1,5 @@
 import {
+  setTasks,
   getAllsTask,
   getAllSectionTasks,
   deleteSectionTask,
@@ -14,6 +15,7 @@ import {
   editTaskById,
   setSectionTasks,
   deleteDuplicateCategories,
+  deleteDuplicateTasks,
 } from "./tasks.mjs";
 import { Eggy } from "../js/vendors/eggy.mjs";
 import { validateTask } from "../helpers/validations.mjs";
@@ -452,12 +454,44 @@ export async function importCategories(fileJSON) {
       currentCategories,
       categoriesToImport
     );
-    console.log(totalCategories);
+
     if (totalCategories.length) {
       setSectionTasks([...currentCategories, ...totalCategories]);
       Eggy({
         title: "Se importaron las categorías",
         message: `Se importaron ${totalCategories.length} categorías`,
+        type: "success",
+      });
+      setTimeout(() => window.location.reload(), 1300);
+    }
+  }
+}
+
+export async function importTasks(fileJSON) {
+  if (validateImportedFile(fileJSON)) {
+    const currentCategory = getCurrentSectionId();
+    if (!currentCategory) {
+      return alert("Selecciona una categoría para importar");
+    }
+
+    const currentTasks = getAllsTask();
+    const result = await readFile(fileJSON);
+    const tasksToImport = JSON.parse(result);
+
+    const totalTasks = deleteDuplicateTasks(currentTasks, tasksToImport);
+
+    if (totalTasks.length) {
+      let tasks = [...currentTasks, ...totalTasks];
+     
+      tasks = tasks.map((task) => {
+        task.sectionId = currentCategory;
+        return task;
+      });
+
+      setTasks(tasks);
+      Eggy({
+        title: "Se importaron las tareas",
+        message: `Se importaron ${totalTasks.length} tareas`,
         type: "success",
       });
       setTimeout(() => window.location.reload(), 1300);

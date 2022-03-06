@@ -1,6 +1,6 @@
 // --------  TASKS --------
 
-function setTasks(tasks) {
+export function setTasks(tasks) {
   localStorage.setItem("task", JSON.stringify(tasks));
 }
 
@@ -180,4 +180,16 @@ export function deleteDuplicateCategories(categoryArray1, categoriesArray2) {
     });
   });
   return categories;
+}
+
+export function deleteDuplicateTasks(tasksArray1, taskArray2) {
+  const tasks = taskArray2.filter((_task) => {
+    return !tasksArray1.some((task) => {
+      return (
+        task.id === _task.id &&
+        task.title.toLocaleLowerCase() === _task.title.toLocaleLowerCase()
+      );
+    });
+  });
+  return tasks;
 }

@@ -13,6 +13,7 @@ import {
   selector,
   toggleCreateCategoryBanner,
   importCategories,
+  importTasks,
 } from "../helpers/dom.mjs";
 import { Eggy } from "./vendors/eggy.mjs";
 import { validateCategory, validateTask } from "../helpers/validations.mjs";
@@ -21,8 +22,10 @@ window.addEventListener("DOMContentLoaded", () => {
   const btnExportCategories = getNode("export-sections");
   const btnExportTask = getNode("export-tasks");
   const btnImportCategories = getNode("import-sections");
+  const btnImportTasks = getNode("import-tasks");
 
   const btnImportCategoriesFile = getNode("import-section-file");
+  const btnImportTasksFile = getNode("import-task-file");
 
   const btnToggleModal = getNode("btn-create");
   const btnCreateTask = getNode("btn-create-task");
@@ -36,9 +39,18 @@ window.addEventListener("DOMContentLoaded", () => {
     btnImportCategoriesFile.click();
   });
 
+  on(btnImportTasks).click(() => {
+    btnImportTasksFile.click();
+  });
+
   on(btnImportCategoriesFile).change(async (e) => {
     const [file] = e.target.files;
     await importCategories(file);
+  });
+
+  on(btnImportTasksFile).change(async (e) => {
+    const [file] = e.target.files;
+    await importTasks(file);
   });
 
   on(btnToggleModal).click(() => {
