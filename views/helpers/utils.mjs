@@ -50,3 +50,15 @@ export function ErrorAlert(msj, err = "Ocurrió un error") {
   Swal.fire(err, msj, "error");
   return false;
 }
+
+export const toArrayObject = (obj) => {
+  const entries = Object.entries(obj);
+  const parsed = entries.map(([key, value]) => ({ key, value }));
+  return parsed;
+};
+
+export async function getIcons() {
+  const req = await fetch("./icons/icons.json");
+  const json = await req.json();
+  return json;
+}

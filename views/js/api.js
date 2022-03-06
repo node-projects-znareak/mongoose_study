@@ -1,8 +1,6 @@
 import { getAllSectionTasks, getCurrentSectionId } from "../helpers/tasks.mjs";
-
 import {
   createTaskSectionNode,
-  getIcons,
   getNode,
   selector,
   selectorAll,
@@ -10,6 +8,7 @@ import {
   toggleBtnCreateTask,
   toggleCreateCategoryBanner,
 } from "../helpers/dom.mjs";
+import { getIcons } from "../helpers/utils.mjs";
 
 window.addEventListener("DOMContentLoaded", () => {
   (async () => {

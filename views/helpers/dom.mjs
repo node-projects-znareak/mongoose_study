@@ -20,25 +20,26 @@ import {
 import { Eggy } from "../js/vendors/eggy.mjs";
 import { validateTask } from "../helpers/validations.mjs";
 import ICONS from "./icons.mjs";
-import { readFile, validateImportedFile } from "./utils.mjs";
+import { readFile, validateImportedFile, toArrayObject } from "./utils.mjs";
 
 export const getNode = (id) => document.getElementById(id);
 export const selector = (select) => document.querySelector(select);
 export const selectorAll = (select) => document.querySelectorAll(select);
 
 export const on = (node) => {
+  const event = (e, cb) => node.addEventListener(e, cb, false);
   return {
     click(cb) {
-      node.addEventListener("click", cb, false);
+      event("click", cb);
     },
     mouseenter(cb) {
-      node.addEventListener("mouseenter", cb, false);
+      event("mouseenter", cb);
     },
     submit(cb) {
-      node.addEventListener("submit", cb, false);
+      event("submit", cb);
     },
     change(cb) {
-      node.addEventListener("change", cb, false);
+      event("change", cb);
     },
   };
 };
@@ -57,12 +58,6 @@ export const createElement = (initObj) => {
     } else element[prop] = initObj[prop];
   }
   return element;
-};
-
-export const toArrayObject = (obj) => {
-  const entries = Object.entries(obj);
-  const parsed = entries.map(([key, value]) => ({ key, value }));
-  return parsed;
 };
 
 export function createTaskSectionNode(title, desc, icon, id) {
@@ -241,9 +236,11 @@ export function createTaskSectionNode(title, desc, icon, id) {
 }
 
 export function createOptionList(icon, name, select) {
-  const op = document.createElement("li");
-  op.setAttribute("data-icon", name);
-  op.insertAdjacentHTML("afterbegin", `${icon} <span>${name}</span>`);
+  const op = createElement({
+    tag: "li",
+    attributes: [{ key: "data-icon", value: name }],
+    innerHTML: `${icon} <span>${name}</span>`,
+  });
   const dropdownContainer = select.parentNode;
   const containerSelect = dropdownContainer.parentNode;
   const inputIcon = containerSelect.querySelector("#_icon");
@@ -389,7 +386,9 @@ export function createTask({ title, desc, date, status, id, sectionId }) {
   on(taskDeleteBtn).click(() => {
     deleteTask(id, sectionId);
     taskContainer.remove();
+    showTaskBySection();
   });
+  
   const containerButtons = createElement({
     tag: "div",
     className: "task-container-buttons",
@@ -411,14 +410,9 @@ export function showTaskBySection() {
   const selectCategory = selector(".select-category");
   const tasksContainer = getNode("tasks");
   tasksContainer.innerHTML = "";
-
+  selectCategory.style.display = tasks.length ? "none" : "block";
   if (tasks.length) {
-    selectCategory.style.display = "none";
-    for (const task of tasks) {
-      createTask(task);
-    }
-  } else {
-    selectCategory.style.display = "block";
+    for (const task of tasks) createTask(task);
   }
   return tasks.length > 0;
 }
@@ -449,7 +443,6 @@ export async function importCategories(fileJSON) {
     const currentCategories = getAllSectionTasks();
     const result = await readFile(fileJSON);
     const categoriesToImport = JSON.parse(result);
-
     const totalCategories = deleteDuplicateCategories(
       currentCategories,
       categoriesToImport
@@ -471,19 +464,20 @@ export async function importTasks(fileJSON) {
   if (validateImportedFile(fileJSON)) {
     const currentCategory = getCurrentSectionId();
     if (!currentCategory) {
-      return alert("Selecciona una categoría para importar");
+      return Eggy({
+        title: "Error",
+        message: `Selecciona una categoría para importar`,
+        type: "error",
+      });
     }
 
     const currentTasks = getAllsTask();
     const result = await readFile(fileJSON);
     const tasksToImport = JSON.parse(result);
-
     const totalTasks = deleteDuplicateTasks(currentTasks, tasksToImport);
 
     if (totalTasks.length) {
-      let tasks = [...currentTasks, ...totalTasks];
-     
-      tasks = tasks.map((task) => {
+      const tasks = [...currentTasks, ...totalTasks].map((task) => {
         task.sectionId = currentCategory;
         return task;
       });
@@ -499,12 +493,6 @@ export async function importTasks(fileJSON) {
   }
 }
 
-export async function getIcons() {
-  const req = await fetch("./icons/icons.json");
-  const json = await req.json();
-  return json;
-}
-
 export function loadOptionListIcons() {
   for (const [name, [[icon]]] of Object.entries(window.icons)) {
     createOptionList(icon.svg_path, icon.name, getNode("icon"));
@@ -513,21 +501,13 @@ export function loadOptionListIcons() {
 
 export function toggleCreateCategoryBanner(flag) {
   const banner = selector(".create-section");
-  if (flag) {
-    return (banner.style.display = "none");
-  }
-
-  if (banner.style.display === "none") banner.style.display = "block";
+  const display = flag ? "none" : "block";
+  banner.style.display = display;
 }
 
 export function toggleBtnCreateTask() {
   const currentSection = getCurrentSectionId();
   const btnCreateTasks = getNode("btn-create-task");
   const tasksLength = getTaskCountBySection(currentSection);
-
-  if (!tasksLength) {
-    btnCreateTasks.style.display = "block";
-  } else {
-    btnCreateTasks.style.display = "none";
-  }
+  btnCreateTasks.style.display = !tasksLength ? "block" : "none";
 }
