@@ -248,7 +248,7 @@ export function createTask({ title, desc, date, status, id, sectionId }) {
   const tasksContainer = getNode("tasks");
   const taskContainer = createElement({
     tag: "div",
-    className: "task",
+    className: `task${status ? " task-done" : ""}`,
     attributes: [
       { key: "data-task-id", value: id },
       { key: "data-task-section-id", value: sectionId },
@@ -404,7 +404,7 @@ export function showTaskBySection() {
   const tasksContainer = getNode("tasks");
   tasksContainer.innerHTML = "";
   selectCategory.style.display = tasks.length ? "none" : "block";
-  toggleBtnCreateTask()
+  toggleBtnCreateTask();
   if (!tasks.length) {
     selectCategory.querySelector(".select-category-title").textContent =
       "No hay tareas en esta categoría";

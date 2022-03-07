@@ -788,12 +788,17 @@ textarea.input {
     word-break: break-all;
     margin: 0 3px 10px 3px;
 
-    &.task-finished {
-      .task-done {
+    &.task-done {
+      opacity: 0.6;
+      &::before {
+        content: "✓";
         display: block;
         position: absolute;
-        bottom: 2px;
+        top: -12px;
         right: 2px;
+        font-size: 1.8rem;
+        font-weight: bolder;
+        color: #00C897;
       }
     }
 
