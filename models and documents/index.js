@@ -23,10 +23,17 @@ async function app() {
   //const data = await user1.save();
   //console.log(data);
 
-  const user = await User.findById("621d68378e1b77ab38b7c464", "name surname email");
-  user.name = "JUAN ALEJANDRO"
-  await user.save();
-  console.log(user)
+  const user = await User.findById(
+    "621d68378e1b77ab38b7c464",
+    "name surname email"
+  );
+  // user.name = "JUAN ALEJANDRO"
+  // await user.save();
+  await User.replaceOne(
+    { _id: "621d68378e1b77ab38b7c464" },
+    { name: "Editado!" }
+  );
+  console.log(user);
 }
- 
+
 module.exports = app;

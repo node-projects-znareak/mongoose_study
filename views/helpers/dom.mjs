@@ -506,6 +506,5 @@ export function toggleCreateCategoryBanner(flag) {
 export function toggleBtnCreateTask() {
   const currentSection = getCurrentSectionId();
   const btnCreateTasks = getNode("btn-create-task");
-  const tasksLength = getTaskCountBySection(currentSection);
-  btnCreateTasks.style.display = !tasksLength ? "block" : "none";
+  btnCreateTasks.style.display = currentSection ? "block" : "none";
 }
